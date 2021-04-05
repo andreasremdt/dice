@@ -1,0 +1,25 @@
+{
+  "name": "dice",
+  "version": "0.0.1",
+  "description": "D.I.C.E. stands for dependency-free, interactive, custom elements, a collection of custom HTML elements.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andreasremdt/dice.git"
+  },
+  "keywords": [
+    "custom elements",
+    "web components",
+    "html",
+    "javascript"
+  ],
+  "author": "Andreas Remdt",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/andreasremdt/dice/issues"
+  },
+  "homepage": "https://github.com/andreasremdt/dice#readme"
+}
