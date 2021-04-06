@@ -4,7 +4,7 @@
   "description": "D.I.C.E. stands for dependency-free, interactive, custom elements, a collection of custom HTML elements.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "babel ./src -d ./lib"
   },
   "repository": {
     "type": "git",
@@ -21,5 +21,12 @@
   "bugs": {
     "url": "https://github.com/andreasremdt/dice/issues"
   },
-  "homepage": "https://github.com/andreasremdt/dice#readme"
+  "homepage": "https://github.com/andreasremdt/dice#readme",
+  "devDependencies": {
+    "@babel/cli": "^7.13.14",
+    "@babel/core": "^7.13.14",
+    "@babel/plugin-proposal-class-properties": "^7.13.0",
+    "@babel/plugin-proposal-private-methods": "^7.13.0",
+    "@babel/preset-env": "^7.13.12"
+  }
 }
