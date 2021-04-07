@@ -1,6 +1,6 @@
 {
   "name": "@andreasremdt/dice",
-  "version": "0.0.1-alpha",
+  "version": "0.0.2-alpha",
   "description": "D.I.C.E. stands for dependency-free, interactive, custom elements, a collection of custom HTML elements.",
   "scripts": {
     "build": "babel ./src -d ./lib",
