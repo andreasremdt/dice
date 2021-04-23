@@ -1,8 +1,8 @@
 class Dropdown extends HTMLElement {
   #root = this.attachShadow({ mode: "open" });
   #open = this.hasAttribute("open");
+  #placement = this.getAttribute("placement") || "bottom";
   #align = this.getAttribute("align") || "left";
-  #justify = this.getAttribute("justify") || "bottom";
   #focused = 0;
 
   connectedCallback() {
@@ -20,6 +20,12 @@ class Dropdown extends HTMLElement {
       } else {
         this.hide();
       }
+    } else if (name == "placement" && oldValue && oldValue != newValue) {
+      this.#placement = newValue;
+      this.#root.adoptedStyleSheets = [this.#styles];
+    } else if (name == "align" && oldValue && oldValue != newValue) {
+      this.#align = newValue;
+      this.#root.adoptedStyleSheets = [this.#styles];
     }
   }
 
@@ -130,6 +136,28 @@ class Dropdown extends HTMLElement {
     }
   }
 
+  get placement() {
+    return this.#placement;
+  }
+
+  set placement(value) {
+    if (["top", "bottom", "right", "left"].includes(value)) {
+      this.#placement = value;
+      this.#root.adoptedStyleSheets = [this.#styles];
+    }
+  }
+
+  get align() {
+    return this.#align;
+  }
+
+  set align(value) {
+    if (["top", "bottom", "right", "left"].includes(value)) {
+      this.#align = value;
+      this.#root.adoptedStyleSheets = [this.#styles];
+    }
+  }
+
   get #focusable() {
     return this.querySelectorAll(
       "a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), iframe, object, embed, *[tabindex], *[contenteditable]"
@@ -146,7 +174,6 @@ class Dropdown extends HTMLElement {
   get #styles() {
     var sheet = new CSSStyleSheet();
     var button = this.#root.querySelector("button");
-    var menu = this.#root.querySelector("div");
 
     sheet.insertRule(`
       :host {
@@ -165,31 +192,27 @@ class Dropdown extends HTMLElement {
       }
     `);
 
-    if (this.#align == "left") {
-      sheet.insertRule("div { left: 0; }");
+    if (this.#placement == "bottom" || this.#placement == "top") {
+      sheet.insertRule(`div {
+        ${this.#placement == "bottom" ? "top" : "bottom"}: calc(${
+        button.offsetHeight
+      }px + var(--spacing));
+        ${this.#align}: 0;
+      }`);
     }
 
-    if (this.#align == "right") {
-      sheet.insertRule("div { right: 0; }");
-    }
-
-    if (this.#align == "center") {
-      sheet.insertRule(`div { left: -${(menu.offsetWidth - button.offsetWidth) / 2}px; }`);
-    }
-
-    if (this.#justify == "bottom") {
-      sheet.insertRule(`div { top: calc(${button.offsetHeight}px + var(--spacing)); }`);
-    }
-
-    if (this.#justify == "top") {
-      sheet.insertRule(`div { bottom: calc(${button.offsetHeight}px + var(--spacing)); }`);
+    if (this.#placement == "right" || this.#placement == "left") {
+      sheet.insertRule(`div {
+        ${this.#placement == "right" ? "left" : "right"}: calc(100% + var(--spacing));
+        ${this.#align}: 0;
+      }`);
     }
 
     return sheet;
   }
 
   static get observedAttributes() {
-    return ["open", "align", "justify"];
+    return ["open", "align", "placement"];
   }
 }
 
