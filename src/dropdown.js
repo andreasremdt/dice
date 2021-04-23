@@ -1,78 +1,120 @@
 class Dropdown extends HTMLElement {
   #root = this.attachShadow({ mode: "open" });
-  #open = typeof this.getAttribute("open") == "string";
+  #open = this.hasAttribute("open");
   #align = this.getAttribute("align") || "left";
   #justify = this.getAttribute("justify") || "bottom";
-  #spacing = Number(this.getAttribute("spacing")) || 0;
+  #focused = 0;
 
   connectedCallback() {
     this.#render();
 
-    document.addEventListener("keydown", this.#handleKeyDown);
-    document.addEventListener("click", this.#handleOuterClick);
-  }
-
-  disconnectedCallback() {
-    document.removeEventListener("keydown", this.#handleKeyDown);
-    document.removeEventListener("click", this.#handleOuterClick);
+    if (this.#open) {
+      this.show();
+    }
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
-    if (oldValue != newValue) {
-      this.#render();
+    if (name == "open" && newValue) {
+      if (newValue == "true") {
+        this.show();
+      } else {
+        this.hide();
+      }
     }
   }
 
-  #handleKeyDown = (evt) => {
-    if (evt.key == "Escape" && this.open) {
-      this.#open = false;
-      this.#root.querySelector("details").open = false;
+  show() {
+    document.addEventListener("keydown", this.#handleKeyDown);
+    document.addEventListener("click", this.#handleOuterClick);
+
+    this.#open = true;
+    this.#focused = -1;
+    this.#root.querySelector("div").removeAttribute("hidden");
+    this.#root.querySelector("button").setAttribute("aria-expanded", "true");
+  }
+
+  hide(focus = true) {
+    document.removeEventListener("keydown", this.#handleKeyDown);
+    document.removeEventListener("click", this.#handleOuterClick);
+
+    this.#open = false;
+    this.#root.querySelector("div").setAttribute("hidden", "true");
+    this.#root.querySelector("button").setAttribute("aria-expanded", "false");
+
+    if (focus) {
+      this.#root.querySelector("button").focus();
     }
-  };
+  }
 
   #handleOuterClick = ({ target }) => {
-    if (this.open && !target.closest("dice-dropdown")) {
-      this.#open = false;
-      this.#root.querySelector("details").open = false;
+    if (!target.closest("dice-dropdown")) {
+      this.hide();
     }
   };
 
-  #handleClick = (evt) => {
-    evt.preventDefault();
+  #handleKeyDown = (evt) => {
+    if (evt.key == "Escape") {
+      this.hide();
+    }
 
-    this.#open = !this.#open;
-    this.#root.querySelector("details").open = this.#open;
+    if (["ArrowDown", "ArrowUp", "Tab", "Home", "End"].includes(evt.key)) {
+      if (evt.key == "ArrowDown" || (evt.key == "Tab" && !evt.shiftKey)) {
+        if (this.#focused < this.#focusable.length - 1) {
+          evt.preventDefault();
+
+          this.#focused++;
+        } else if (evt.key == "Tab") {
+          this.hide(false);
+        }
+      } else if (evt.key == "ArrowUp" || (evt.key == "Tab" && evt.shiftKey)) {
+        if (this.#focused > 0) {
+          evt.preventDefault();
+
+          this.#focused--;
+        } else if (evt.key == "Tab" && document.activeElement.isEqualNode(this)) {
+          this.hide(false);
+        }
+      } else if (evt.key == "Home") {
+        this.#focused = 0;
+      } else if (evt.key == "End") {
+        this.#focused = this.#focusable.length - 1;
+      }
+
+      this.#focusable[this.#focused].focus();
+    }
   };
 
   #handleToggle = () => {
-    this.#open = this.#root.querySelector("details").open;
+    if (this.#open) {
+      this.hide();
+    } else {
+      this.show();
+    }
   };
 
   #render() {
-    var details = document.createElement("details");
-    var summary = document.createElement("summary");
-    var summarySlot = document.createElement("slot");
-    var defaultSlot = document.createElement("slot");
-    var div = document.createElement("div");
+    this.#root.innerHTML = "";
 
-    summarySlot.setAttribute("name", "trigger");
-    summarySlot.onclick = this.#handleClick;
+    var button = document.createElement("button");
+    var menu = document.createElement("div");
+    var buttonSlot = document.createElement("slot");
+    var menuSlot = document.createElement("slot");
 
-    div.setAttribute("part", "menu");
-    div.setAttribute("role", "menu");
-    div.append(defaultSlot);
+    button.setAttribute("part", "button");
+    button.setAttribute("id", this.#uid);
+    button.setAttribute("aria-expanded", this.#open ? "true" : "false");
+    button.onclick = this.#handleToggle;
+    button.append(buttonSlot);
 
-    summary.setAttribute("part", "summary");
-    summary.setAttribute("aria-haspopup", "menu");
-    summary.setAttribute("role", "button");
-    summary.append(summarySlot);
+    menu.setAttribute("part", "menu");
+    menu.setAttribute("role", "menu");
+    menu.setAttribute("aria-labelledby", button.id);
+    menu.setAttribute("hidden", "true");
+    menu.append(menuSlot);
 
-    details.setAttribute("part", "details");
-    details.open = this.open;
-    details.ontoggle = this.#handleToggle;
-    details.append(summary, div);
+    menuSlot.setAttribute("name", "menu");
 
-    this.#root.append(details);
+    this.#root.append(button, menu);
     this.#root.adoptedStyleSheets = [this.#styles];
   }
 
@@ -80,9 +122,31 @@ class Dropdown extends HTMLElement {
     return this.#open;
   }
 
+  set open(opened) {
+    if (opened) {
+      this.show();
+    } else {
+      this.hide();
+    }
+  }
+
+  get #focusable() {
+    return this.querySelectorAll(
+      "a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), iframe, object, embed, *[tabindex], *[contenteditable]"
+    );
+  }
+
+  get #uid() {
+    var first = Math.floor(Math.random() * 46656);
+    var second = Math.floor(Math.random() * 46656);
+
+    return first.toString(36) + second.toString(36);
+  }
+
   get #styles() {
     var sheet = new CSSStyleSheet();
-    var summary = this.#root.querySelector("summary");
+    var button = this.#root.querySelector("button");
+    var menu = this.#root.querySelector("div");
 
     sheet.insertRule(`
       :host {
@@ -90,9 +154,10 @@ class Dropdown extends HTMLElement {
         display: inline-block;
       }
     `);
-    sheet.insertRule("summary { list-style-type: none }");
+
     sheet.insertRule(`
       div {
+        --spacing: 0;
         position: absolute;
         background-color: white;
         width: max-content;
@@ -109,24 +174,22 @@ class Dropdown extends HTMLElement {
     }
 
     if (this.#align == "center") {
-      sheet.insertRule(
-        `div { left: -${(summary.nextElementSibling.offsetWidth - summary.offsetWidth) / 2}px; }`
-      );
+      sheet.insertRule(`div { left: -${(menu.offsetWidth - button.offsetWidth) / 2}px; }`);
     }
 
     if (this.#justify == "bottom") {
-      sheet.insertRule(`div { top: ${summary.offsetHeight + this.#spacing}px; }`);
+      sheet.insertRule(`div { top: calc(${button.offsetHeight}px + var(--spacing)); }`);
     }
 
     if (this.#justify == "top") {
-      sheet.insertRule(`div { bottom: ${summary.offsetHeight + this.#spacing}px; }`);
+      sheet.insertRule(`div { bottom: calc(${button.offsetHeight}px + var(--spacing)); }`);
     }
 
     return sheet;
   }
 
   static get observedAttributes() {
-    return ["open", "align", "justify", "spacing"];
+    return ["open", "align", "justify"];
   }
 }
 
