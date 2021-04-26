@@ -1,69 +1,113 @@
 class Tabs extends HTMLElement {
   #root = this.attachShadow({ mode: "open" });
+  #active = this.getAttribute("active");
 
   connectedCallback() {
     this.#render();
-    this.#prepare();
 
-    this.addEventListener("click", this.#handleTabClick);
+    if (this.#active) {
+      this.show(this.#active);
+    }
+
+    document.addEventListener("keydown", this.#handleKeyDown);
   }
 
   disconnectedCallback() {
-    this.removeEventListener("click", this.#handleTabClick);
+    document.removeEventListener("keydown", this.#handleKeyDown);
   }
 
-  #handleTabClick = ({ target }) => {
-    if (target.hasAttribute("data-for")) {
-      this.#hideContent();
-
-      target.removeAttribute("tabindex");
-      this.querySelector("#" + target.dataset.for)?.removeAttribute("hidden");
+  attributeChangedCallback(name, oldValue, newValue) {
+    if (name == "active" && oldValue && oldValue != newValue) {
+      this.#active = newValue;
+      this.show(newValue);
+    } else if (name == "label" && oldValue && oldValue != newValue) {
+      this.#root.querySelector('div[role="tablist"]').setAttribute("aria-label", newValue);
     }
-  };
+  }
 
-  #prepare() {
-    var selected = this.getAttribute("selected");
-
+  show(id) {
     for (let child of this.children) {
-      let dataFor = child.getAttribute("data-for");
-      let id = child.getAttribute("id");
-
-      if (child.hasAttribute("slot")) {
-        child.setAttribute("role", "tab");
-        child.setAttribute("aria-selected", selected == dataFor);
-        child.setAttribute("aria-controls", dataFor);
-        child.setAttribute("id", `${dataFor}-tab`);
-
-        if (selected != dataFor) {
+      if (child.hasAttribute("slot") && child.hasAttribute("data-for")) {
+        if (child.getAttribute("data-for") == id) {
+          child.setAttribute("aria-selected", "true");
+          child.removeAttribute("tabindex");
+        } else {
+          child.setAttribute("aria-selected", "false");
           child.setAttribute("tabindex", "-1");
         }
       } else {
-        child.setAttribute("tabindex", "0");
-        child.setAttribute("role", "tabpanel");
-        child.setAttribute("aria-labelledby", `${id}-tab`);
-
-        if (selected != id) {
+        if (child.getAttribute("id") == id) {
+          child.removeAttribute("hidden");
+        } else {
           child.setAttribute("hidden", "true");
         }
       }
     }
+
+    this.#active = id;
   }
 
-  #hideContent() {
-    for (let child of this.children) {
-      if (!child.hasAttribute("slot")) {
-        child.setAttribute("hidden", "true");
-      } else {
-        child.setAttribute("tabindex", "-1");
+  #handleTabClick = (evt) => {
+    evt.preventDefault();
+
+    this.show(evt.target.getAttribute("data-for"));
+  };
+
+  #handleKeyDown = (evt) => {
+    if (["ArrowLeft", "ArrowRight", "Home", "End"].includes(evt.key)) {
+      if (
+        this.contains(document.activeElement) &&
+        document.activeElement.hasAttribute("data-for")
+      ) {
+        let index = this.#tabButtons.findIndex(
+          (tabButton) => tabButton.getAttribute("data-for") == this.#active
+        );
+
+        if (evt.key == "ArrowRight") {
+          if (index < this.#tabButtons.length - 1) {
+            index++;
+          } else if (index == this.#tabButtons.length - 1) {
+            index = 0;
+          }
+        } else if (evt.key == "ArrowLeft") {
+          if (index > 0) {
+            index--;
+          } else if (index == 0) {
+            index = this.#tabButtons.length - 1;
+          }
+        } else if (evt.key == "Home") {
+          index = 0;
+        } else if (evt.key == "End") {
+          index = this.#tabButtons.length - 1;
+        }
+
+        this.#tabButtons[index].focus();
+        this.show(this.#tabButtons[index].getAttribute("data-for"));
       }
     }
-  }
+  };
 
   #render() {
     var tabs = document.createElement("div");
     var content = document.createElement("div");
     var tabsSlot = document.createElement("slot");
     var slot = document.createElement("slot");
+
+    for (let child of this.children) {
+      let dataFor = child.getAttribute("data-for");
+      let id = child.getAttribute("id");
+
+      if (child.hasAttribute("slot") && child.hasAttribute("data-for")) {
+        child.setAttribute("role", "tab");
+        child.setAttribute("aria-controls", dataFor);
+        child.setAttribute("id", `${dataFor}-tab`);
+        child.onclick = this.#handleTabClick;
+      } else {
+        child.setAttribute("tabindex", "0");
+        child.setAttribute("role", "tabpanel");
+        child.setAttribute("aria-labelledby", `${id}-tab`);
+      }
+    }
 
     tabs.setAttribute("part", "tabs");
     tabs.setAttribute("role", "tablist");
@@ -78,8 +122,32 @@ class Tabs extends HTMLElement {
     this.#root.append(tabs, content);
   }
 
+  get active() {
+    return this.#active;
+  }
+
+  set active(value) {
+    this.#active = value;
+
+    this.show(value);
+  }
+
+  get label() {
+    return this.getAttribute("label");
+  }
+
+  set label(value) {
+    this.#root.querySelector('div[role="tablist"]').setAttribute("aria-label", value);
+  }
+
+  get #tabButtons() {
+    return Array.from(this.children).filter(
+      (child) => child.hasAttribute("slot") && child.hasAttribute("data-for")
+    );
+  }
+
   static get observedAttributes() {
-    return ["selected", "label"];
+    return ["active", "label"];
   }
 }
 

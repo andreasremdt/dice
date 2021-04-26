@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tabs</title>
+    <style>
+      body {
+        font: normal 16px/1.5 Ubuntu, sans-serif;
+        margin: 100px;
+      }
+
+      dice-tabs::part(tabs) {
+        border-bottom: 1px solid #dee2e6;
+      }
+
+      dice-tabs::part(content) {
+        margin-top: 1rem;
+      }
+
+      .tab-button {
+        padding: 0.5rem 1rem;
+        transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
+          border-color 0.15s ease-in-out;
+        margin-bottom: -1px;
+        border: 1px solid transparent;
+        border-radius: 0.25rem 0.25rem 0 0;
+        background-color: transparent;
+        font: inherit;
+        color: #0d6efd;
+        cursor: pointer;
+      }
+
+      .tab-button[aria-selected="true"] {
+        color: #495057;
+        background-color: #fff;
+        border-color: #dee2e6 #dee2e6 #fff;
+      }
+    </style>
+  </head>
+  <body>
+    <dice-tabs active="tab2" label="This is a nice label">
+      <button slot="tab" data-for="tab1" class="tab-button">Tab #1</button>
+      <button slot="tab" data-for="tab2" class="tab-button">Tab #2</button>
+
+      <div id="tab1">Content of tab #1</div>
+      <div id="tab2">Content of tab #2</div>
+    </dice-tabs>
+
+    <p>Design by Bootstrap 5.</p>
+
+    <script src="tabs.js" defer></script>
+  </body>
+</html>
