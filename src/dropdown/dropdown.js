@@ -184,7 +184,7 @@ class Dropdown extends HTMLElement {
 
     sheet.insertRule(`
       div {
-        --spacing: 0;
+        --spacing: 0px;
         position: absolute;
         background-color: white;
         width: max-content;
