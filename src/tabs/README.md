@@ -1,152 +1,117 @@
-# Dropdown
+# Tabs
 
-The dropdown component can be used whenever the goal is to implement a customizable menu is needed, which can be triggered via a button click or JavaScript.
+The tabs component is used when you want to make certain content visible within the same area only after a user requested it. Say you want to group a page into categories, like _General_, _Settings_, and _Security_; instead of having dedicated pages for them, you could unite them on the same page, separated by a tab menu.
 
-Most web applications make use of this popular component pattern, e.g. GitHubs user menu on the top right corner. The difference to using a `select` element is that any kind of content can be put into a dropdown, including lists, buttons, links, images, and more. `select` elements only support `option` elements inside, limiting its use case to forms or pure text data.
+Some prominent web applications that use this pattern are GitHub or Bootstrap.
 
-The `dice-dropdown` component is designed with accessiblity and customization in mind. You can freely decide what HTML structure should be part of the menu and the triggering button and can style them to your wishes.
+The `dice-tabs` component is designed with accessiblity and customization in mind. You can freely decide what HTML structure should be inside the tab content and you can rearange the layout of buttons and content freely.
 
 ## Usage
 
 Basic HTML structure
 
 ```html
-<dice-dropdown>
-  Click me
+<dice-tabs>
+  <button slot="tab" data-for="tab1">Tab #1</button>
+  <button slot="tab" data-for="tab2">Tab #2</button>
 
-  <ul slot="menu">
-    <li><a href="#">Link #1</a></li>
-    <li><a href="#">Link #2</a></li>
-  </ul>
-</dice-dropdown>
+  <div id="tab1">Content of tab #1</div>
+  <div id="tab2">Content of tab #2</div>
+</dice-tabs>
 ```
 
-### Button
+### Buttons
 
-Everything that isn't part of a named slot inside the `dice-dropdown` element is part of the button. In the above example, the text "Click me" will be put inside. You can also include images, SVGs, or other elements.
+Buttons are what trigger the tab content to show. Clicking on "Tab #1" hides all the other potential tabs and only displays the associated content.
 
-### Menu
+Each tab must have a button with a `slot` attribute set to `tab` and a `data-for` attribute set to a unique ID. The ID is used to reference the content below.
 
-Elements that are marked with the `menu` slot will be put inside the expanding menu. This can be any HTML structure, such as lists, links, buttons, or anything else.
+You don't have to pass `button` elements but can instead use any other HTML element, like `a`. A click listener will be attached. For accessibility reasons it's recommended to stick to buttons though.
+
+### Content
+
+You can put any kind of element as content (e.g. `section`, `article`, or `div`). It's important to give a unique ID using the `id` attribute to this element, so that it can be toggled properly.
+
+It doesn't matter which or how many elements are inside each tab content.
 
 ## Configuration
 
-You can customize the position of the expanding menu by providing `placement` and `align` attributes:
+There are two attributes that you can set:
 
 ```html
-<dice-dropdown placement="bottom" align="right"></dice-dropdown>
+<dice-tabs active="tab2" label="This is a nice label"></dice-tabs>
 ```
 
-### open
+### active
 
-If you want to have a dropdown opened without the user clicking the button first, you can set the `open` attribute:
+Using the `active` attribute allows you to show a tab by default, e.g. when the page is loaded. This attribute is optional. You must provide a valid ID of a tab content element.
 
-```html
-<dice-dropdown open></dice-dropdown>
-```
+### label
 
-### placement
-
-**Default:** `bottom`
-
-Can be `bottom`, `top`, `left`, or `right`.
-
-### align
-
-**Default:** `left`
-
-If the `placement` attribute is set to `bottom` or `top`, then this attribute can be either `left` or `right`.
-
-Else, if the `placement` attribute is set to `left` or `right`, this attribute can be `bottom`, `top`.
+The `label` attribute translates to `aria-label` internally and is used for accessiblity. Even though it's optional, it's highly recommended.
 
 ## Styling
 
-Every element that is passed into the `menu` slot can freely be styled by your existing CSS using IDs, classes, or element selectors.
+Since you provide most HTML elements, you can also freely style them with your existing CSS using IDs, classes, or element selectors.
 
-### Button
+The `dice-tabs` component exposes two parts, which you can also style to change the layout or direction.
 
-To style the button, the `button` part is made available:
+### Tabs
+
+All tab buttons are wrapped in a `div` element, which can be styled by using `::part(tabs)`. This way, the buttons could be moved to the bottom, left, or right using CSS Flexbox.
 
 ```css
-dice-dropdown::part(button) {
-  background-color: #6c757d;
-}
-
-dice-dropdown::part(button):hover {
-  background-color: #365934;
+dice-tabs::part(tabs) {
+  border-bottom: 1px solid #dee2e6;
 }
 ```
 
-### Menu
+### Content
 
-To style the menu, the `menu` part is made available:
+The tab content is also wrapped in a `div` element, which can be styled by using `::part(content)`.
 
 ```css
-dice-dropdown::part(menu) {
-  border: 1px solid #d3d4d5;
+dice-tabs::part(content) {
+  margin-top: 1rem;
 }
 ```
-
-_Attention:_ overriding existing CSS properties such as `position` can lead to a broken appearance. To avoid breaking the component, don't set the following properties: `position`, `top`, `left`, `right`, and `bottom`.
 
 ## Accessibility
 
-Elements inside the dropdown that can receive focus (such as buttons or links) will be indexed automatically and keyboard navigation will be enabled.
+Tab content is hidden using the `hidden` attribute, which makes it also disappear for screen readers.
 
-A dropdown can be opened by focusing the button and pressing "Enter". Once it's opened, it can be closed by pressing "Escape" or clicking outside.
+Once the first tab button is focused, all other buttons are only reachable via the left or right arrow key (after reaching the end or beginning, they are cycling around). Pressing tab again would focus the content of the currently active tab.
 
-If a dropdown is opened and has focusable elements inside, the "Tab" key can be used to navigate through them. Once the end is reached, the dropdown will close and the next element in the DOM tree will be focused.
-
-You can also use the Arrow Up & Arrow Down keys to navigate between elements. Pressing "Home" will focus the first element, pressing "End" will focus the last one.
+Pressing "Home" will focus the first tab button, pressing "End" will focus the last one.
 
 ## JavaScript API
 
 ### Methods
 
-You can programmatically show or hide the dropdown by calling the appropriate methods:
+You can programmatically show a certain tab via its unique ID by calling the `show` method:
 
 ```js
-var dropdown = document.querySelector("dice-dropdown");
+var tabs = document.querySelector("dice-tabs");
 
-// Makes the dropdown appear
-dropdown.show();
-
-// Hides the dropdown
-dropdown.hide();
+tabs.show("some-id");
 ```
 
 ### Properties
 
-Alternatively to the above methods, you can set the `open` property:
+Alternatively to the above methods, you can set the `active` property:
 
 ```js
-var dropdown = document.querySelector("dice-dropdown");
+var tabs = document.querySelector("dice-tabs");
 
-// Makes the dropdown appear
-dropdown.open = true;
-
-// Hides the dropdown
-dropdown.open = false;
+tabs.active = "some-id";
 ```
 
-The `open` property also reflects the current state, meaning that if the dropdown is shown, it will return `true`, otherwise `false`.
+The `active` property also reflects the current state, meaning the ID of the tab which is currently visible.
 
-If you want to change the placement and alignment after the component has been rendered, you can do so via the appropriate properties:
-
-```js
-var dropdown = document.querySelector("dice-dropdown");
-
-// This will change the position of the dropdown
-dropdown.placement = "right";
-dropdown.align = "top";
-```
-
-The same task can be achieved by updating the attributes:
+You can also change the `aria-label` by setting the `label` property:
 
 ```js
-var dropdown = document.querySelector("dice-dropdown");
+var tabs = document.querySelector("dice-tabs");
 
-// This will change the position of the dropdown
-dropdown.setAttribute("placement", "right");
-dropdown.setAttribute("align", "top");
+tabs.label = "A new label";
 ```
