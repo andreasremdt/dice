@@ -1,6 +1,7 @@
 class Dialog extends HTMLElement {
   #root = this.attachShadow({ mode: "open" });
   #open = this.hasAttribute("open");
+  #lastElementFocused = null;
   #focused = 0;
 
   connectedCallback() {
@@ -14,6 +15,7 @@ class Dialog extends HTMLElement {
   showModal() {
     this.#root.querySelector("div").removeAttribute("hidden");
     this.#open = true;
+    this.#lastElementFocused = document.activeElement;
 
     if (this.#focusable.length > 0) {
       this.#focusable[this.#focused].focus();
@@ -25,6 +27,7 @@ class Dialog extends HTMLElement {
   hideModal() {
     this.#root.querySelector("div").setAttribute("hidden", "true");
     this.#open = false;
+    this.#lastElementFocused.focus?.();
 
     document.removeEventListener("keydown", this.#handleKeyDown);
   }
