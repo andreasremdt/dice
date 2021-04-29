@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dialog</title>
+    <style>
+      body {
+        font: normal 16px/1.5 Ubuntu, sans-serif;
+        margin: 100px;
+      }
+
+      input {
+        display: block;
+        width: 100%;
+        padding: 0.375rem 0.75rem;
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1.5;
+        color: #212529;
+        border: 1px solid #ced4da;
+        appearance: none;
+        border-radius: 0.25rem;
+        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+      }
+
+      input:focus {
+        border-color: #86b7fe;
+        outline: 0;
+        box-shadow: 0 0 0 0.25rem rgb(13 110 253 / 25%);
+      }
+
+      dice-dialog::part(backdrop) {
+        background-color: rgba(0, 0, 0, 0.5);
+      }
+
+      dice-dialog::part(dialog) {
+        border: unset;
+        border-radius: 4px;
+      }
+
+      .dialog-header {
+        border-bottom: 1px solid #dee2e6;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1rem 2rem;
+      }
+
+      .dialog-header h1 {
+        margin: unset;
+        font-weight: 500;
+        font-size: 20px;
+      }
+
+      .dialog-header button {
+        background-color: transparent;
+        border: unset;
+        padding: unset;
+        margin: unset;
+        color: #9c9fa1;
+        font-size: 30px;
+        cursor: pointer;
+      }
+
+      .dialog-header button:hover,
+      .dialog-header button:focus {
+        color: #898b8d;
+      }
+
+      .dialog-content {
+        padding: 1rem 2rem;
+      }
+
+      .dialog-content form {
+        display: flex;
+      }
+
+      .dialog-content input:first-child {
+        margin-right: 10px;
+      }
+
+      .dialog-content p {
+        margin-top: unset;
+      }
+
+      .dialog-footer {
+        border-top: 1px solid #dee2e6;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        padding: 1rem 2rem;
+      }
+
+      .dialog-footer button,
+      .trigger {
+        --background-color: #6c757d;
+        --border-color: var(--background-color);
+
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        color: #fff;
+        font: inherit;
+        background-color: var(--background-color);
+        border: 1px solid var(--border-color);
+        padding: 0.375rem 0.75rem;
+        border-radius: 0.25rem;
+        transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
+          border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+      }
+
+      .dialog-footer button:hover,
+      .dialog-footer button:active,
+      .trigger:hover,
+      .trigger:focus {
+        --background-color: #5c636a;
+      }
+
+      .dialog-footer button:last-child {
+        --background-color: #0d6efd;
+        margin-left: 5px;
+      }
+
+      .dialog-footer button:last-child:hover,
+      .dialog-footer button:last-child:active {
+        --background-color: #0b5ed7;
+      }
+    </style>
+  </head>
+  <body>
+    <dice-dialog aria-labelledby="some-id">
+      <header class="dialog-header">
+        <h1 id="some-id">Hello World</h1>
+        <button type="button" onclick="dialog.hideModal();">&times;</button>
+      </header>
+      <div class="dialog-content">
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dicta corrupti architecto
+          reiciendis, quo deserunt ad.
+        </p>
+        <form>
+          <input placeholder="First name" />
+          <input placeholder="Last name" />
+        </form>
+      </div>
+      <footer class="dialog-footer">
+        <button type="button" onclick="dialog.hideModal();">Close</button>
+        <button type="button">Save changes</button>
+      </footer>
+    </dice-dialog>
+
+    <button class="trigger" onclick="dialog.showModal();">Launch dialog</button>
+
+    <p>Design by Bootstrap 5.</p>
+
+    <script src="dialog.js" defer></script>
+    <script>
+      var dialog = document.querySelector("dice-dialog");
+    </script>
+  </body>
+</html>

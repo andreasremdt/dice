@@ -3,6 +3,30 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.8-alpha] - 2021-04-27
+
+### `dice-dropdown`
+
+- Fixed a bug in which would break the placement if no custom `--spacing` CSS prop is defined.
+
+### `dice-tabs`
+
+- Added keyboard navigation
+- Changed the `selected` option to be named `active`
+- Improved accessibility
+- Improved the internal rendering of the HTML
+- Added initial documentation
+- Moved the component and its documentation into a dedicated folder
+
+### `dice-dialog`
+
+- Added keyboard navigation
+- Changed the `selected` option to be named `active`
+- Improved accessibility
+- Improved the internal rendering of the HTML
+- Added initial documentation
+- Moved the component and its documentation into a dedicated folder
+
 ## [0.0.7-alpha] - 2021-04-23
 
 - Updated the README.md
