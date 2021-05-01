@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tabs</title>
+    <style>
+      body {
+        font: normal 16px/1.5 Ubuntu, sans-serif;
+        margin: 100px;
+      }
+
+      dice-tooltip::part(tooltip) {
+        font-size: 14px;
+        border-radius: 4px;
+        padding: 5px 10px;
+      }
+
+      dice-tooltip::part(tooltip)::before {
+        content: "";
+        position: absolute;
+        width: 0;
+        height: 0;
+      }
+
+      dice-tooltip:first-child::part(tooltip)::before {
+        border-left: 5px solid transparent;
+        border-right: 5px solid transparent;
+        border-top: 5px solid var(--background-color);
+        left: 50%;
+        transform: translateX(-50%);
+        top: 100%;
+      }
+
+      dice-tooltip:last-child::part(tooltip)::before {
+        border-right: 5px solid var(--background-color);
+        border-top: 5px solid transparent;
+        border-bottom: 5px solid transparent;
+        right: 100%;
+        transform: translateY(-50%);
+        top: 50%;
+      }
+    </style>
+  </head>
+  <body>
+    <p>
+      <dice-tooltip content="hello world" placement="top" open
+        ><b>Lorem ipsum dolor</b></dice-tooltip
+      >
+      sit amet, consectetur adipisicing elit.
+      <dice-tooltip template="tooltip-content" placement="right"><b>Possimus id</b></dice-tooltip>
+      optio illo nisi voluptatem quibusdam et, ut illum doloribus tempore. Repudiandae ipsa
+      repellendus, sint reiciendis molestias numquam obcaecati placeat odit.
+    </p>
+
+    <template id="tooltip-content">
+      <h3>Todo-List:</h3>
+      <ul>
+        <li>Item #1</li>
+        <li>Item #2</li>
+        <li>Item #3</li>
+      </ul>
+    </template>
+
+    <p>Design by Bootstrap 5.</p>
+
+    <script src="tooltip.js" defer></script>
+  </body>
+</html>
