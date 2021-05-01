@@ -31,16 +31,25 @@ class Tooltip extends HTMLElement {
   show = () => {
     this.#open = true;
     this.#root.querySelector("span").classList.add("visible");
+
+    document.addEventListener("keydown", this.#handleKeyDown);
   };
 
   hide = () => {
     this.#open = false;
     this.#root.querySelector("span").classList.remove("visible");
+
+    document.removeEventListener("keydown", this.#handleKeyDown);
+  };
+
+  #handleKeyDown = (evt) => {
+    if (evt.key == "Escape") {
+      this.hide();
+    }
   };
 
   #render() {
-    this.#root.innerHTML = "";
-
+    var id = `tooltip-${this.#uid}`;
     var span = document.createElement("span");
     var slot = document.createElement("slot");
 
@@ -51,6 +60,8 @@ class Tooltip extends HTMLElement {
     }
 
     span.setAttribute("part", "tooltip");
+    span.setAttribute("id", id);
+    span.setAttribute("role", "tooltip");
 
     if (this.#open) {
       span.classList.add("visible");
@@ -59,6 +70,11 @@ class Tooltip extends HTMLElement {
     slot.onmouseover = this.show;
     slot.onmouseleave = this.hide;
 
+    this.firstElementChild.onfocus = this.show;
+    this.firstElementChild.onblur = this.hide;
+    this.firstElementChild.setAttribute("aria-describedby", id);
+
+    this.#root.innerHTML = "";
     this.#root.append(slot, span);
     this.#root.adoptedStyleSheets = [this.#styles];
   }
@@ -100,6 +116,13 @@ class Tooltip extends HTMLElement {
   set template(value) {
     this.#template = value;
     this.#render();
+  }
+
+  get #uid() {
+    var first = Math.floor(Math.random() * 46656);
+    var second = Math.floor(Math.random() * 46656);
+
+    return first.toString(36) + second.toString(36);
   }
 
   get #styles() {
