@@ -49,13 +49,18 @@ class Tooltip extends HTMLElement {
 
     sheet.insertRule(`
       span {
+        --spacing: 5px;
+        --background-color: #333;
+        --color: white;
+        --transition-duration: 0.2s;
+        --transition-animation: linear;
         position: absolute;
         width: max-content;
-        background-color: #333;
-        color: #fff;
+        background-color: var(--background-color);
+        color: var(--color);
         visibility: hidden;
         opacity: 0;
-        transition: visibility 0s linear 0.1s, opacity 0.1s;
+        transition: visibility 0s var(--transition-animation) var(--transition-duration), opacity var(--transition-duration);
       }
     `);
 
@@ -63,34 +68,20 @@ class Tooltip extends HTMLElement {
       span.visible {
         visibility: visible;
         opacity: 1;
-        transition: visibility 0s linear 0s, opacity 0.1s;
+        transition: visibility 0s var(--transition-animation) 0s, opacity var(--transition-duration);
       }
     `);
 
-    if (this.#placement == "bottom") {
+    if (this.#placement == "bottom" || this.#placement == "top") {
       sheet.insertRule(`span {
-        top: 100%;
-        left: -${(tooltip.offsetWidth - this.offsetWidth) / 2}px;
+        ${this.#placement == "bottom" ? "top" : "bottom"}: calc(100% + var(--spacing));
+        left: ${(this.offsetWidth - tooltip.offsetWidth) / 2}px;
       }`);
     }
 
-    if (this.#placement == "top") {
+    if (this.#placement == "left" || this.#placement == "right") {
       sheet.insertRule(`span {
-        bottom: 100%;
-        left: -${(tooltip.offsetWidth - this.offsetWidth) / 2}px;
-      }`);
-    }
-
-    if (this.#placement == "right") {
-      sheet.insertRule(`span {
-        left: 100%;
-        top: -${(tooltip.offsetHeight - this.offsetHeight) / 2}px;
-      }`);
-    }
-
-    if (this.#placement == "left") {
-      sheet.insertRule(`span {
-        right: 100%;
+        ${this.#placement == "right" ? "left" : "right"}: calc(100% + var(--spacing));
         top: -${(tooltip.offsetHeight - this.offsetHeight) / 2}px;
       }`);
     }
