@@ -1,22 +1,40 @@
 class Tooltip extends HTMLElement {
   #root = this.attachShadow({ mode: "open" });
   #placement = this.getAttribute("placement") || "bottom";
+  #open = this.hasAttribute("open");
+  #template = this.getAttribute("template");
+  #content = this.getAttribute("content");
 
   connectedCallback() {
     this.#render();
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
-    if (oldValue != newValue) {
+    if (name == "open" && newValue) {
+      if (newValue == "true") {
+        this.show();
+      } else {
+        this.hide();
+      }
+    } else if (name == "placement" && oldValue && oldValue != newValue) {
+      this.#placement = newValue;
+      this.#root.adoptedStyleSheets = [this.#styles];
+    } else if (name == "content" && newValue) {
+      this.#content = newValue;
+      this.#render();
+    } else if (name == "template" && newValue) {
+      this.#template = newValue;
       this.#render();
     }
   }
 
-  #handleMouseOver = () => {
+  show = () => {
+    this.#open = true;
     this.#root.querySelector("span").classList.add("visible");
   };
 
-  #handleMouseOut = () => {
+  hide = () => {
+    this.#open = false;
     this.#root.querySelector("span").classList.remove("visible");
   };
 
@@ -26,14 +44,62 @@ class Tooltip extends HTMLElement {
     var span = document.createElement("span");
     var slot = document.createElement("slot");
 
-    span.textContent = this.getAttribute("content");
+    if (!this.#content && this.#template) {
+      span.append(document.getElementById(this.#template).content.cloneNode(true));
+    } else if (this.#content) {
+      span.innerHTML = this.#content;
+    }
+
     span.setAttribute("part", "tooltip");
 
-    slot.onmouseover = this.#handleMouseOver;
-    slot.onmouseout = this.#handleMouseOut;
+    if (this.#open) {
+      span.classList.add("visible");
+    }
+
+    slot.onmouseover = this.show;
+    slot.onmouseleave = this.hide;
 
     this.#root.append(slot, span);
     this.#root.adoptedStyleSheets = [this.#styles];
+  }
+
+  get open() {
+    return this.#open;
+  }
+
+  set open(value) {
+    if (value) {
+      this.show();
+    } else {
+      this.hide();
+    }
+  }
+
+  get placement() {
+    return this.#open;
+  }
+
+  set placement(value) {
+    this.#placement = value;
+    this.#root.adoptedStyleSheets = [this.#styles];
+  }
+
+  get content() {
+    return this.#content;
+  }
+
+  set content(value) {
+    this.#content = value;
+    this.#render();
+  }
+
+  get template() {
+    return this.#template;
+  }
+
+  set template(value) {
+    this.#template = value;
+    this.#render();
   }
 
   get #styles() {
@@ -90,7 +156,7 @@ class Tooltip extends HTMLElement {
   }
 
   static get observedAttributes() {
-    return ["content", "placement"];
+    return ["content", "placement", "open", "template"];
   }
 }
 
