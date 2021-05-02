@@ -26,12 +26,42 @@ class Textarea extends HTMLElement {
     this.#internals.setFormValue(this.#value);
   }
 
+  focus() {
+    this.#root.querySelector("textarea").focus();
+  }
+
+  blur() {
+    this.#root.querySelector("textarea").blur();
+  }
+
+  select() {
+    this.#root.querySelector("textarea").select();
+  }
+
+  setRangeText(...args) {
+    this.#root.querySelector("textarea").setRangeText(...args);
+  }
+
+  setSelectionRange(...args) {
+    this.#root.querySelector("textarea").setSelectionRange(...args);
+  }
+
   #handleInput = ({ target }) => {
     target.parentNode.dataset.value = target.value;
 
     this.#value = target.value;
     this.#internals.setFormValue(this.#value);
     this.#handleValidation();
+  };
+
+  #handleChange = (evt) => {
+    this.dispatchEvent(
+      new CustomEvent("change", {
+        detail: {
+          value: evt.target.value,
+        },
+      })
+    );
   };
 
   #handleValidation() {
@@ -86,6 +116,7 @@ class Textarea extends HTMLElement {
     textarea.setAttribute("part", "textarea");
     textarea.value = this.#value;
     textarea.oninput = this.#handleInput;
+    textarea.onchange = this.#handleChange;
 
     if (textarea.hasAttribute("id")) {
       var label = document.querySelector(`label[for="${textarea.getAttribute("id")}"]`);
