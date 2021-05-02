@@ -3,6 +3,18 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.9-alpha] - 2021-05-01
+
+### `dice-tooltip`
+
+- Added keyboard navigation
+- Added `template` attribute
+- Made the component more customizable using CSS Custom Properties
+- Improved accessibility
+- Improved the internal rendering of the HTML
+- Added initial documentation
+- Moved the component and its documentation into a dedicated folder
+
 ## [0.0.8-alpha] - 2021-04-27
 
 ### `dice-dropdown`
