@@ -37,3 +37,4 @@ This library, its components and the documentation are still under active develo
 - [Dialog](src/dialog)
 - [Tabs](src/tabs)
 - [Tooltip](src/tooltip)
+- [Textarea](src/textarea)

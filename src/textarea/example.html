@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Textarea</title>
+    <style>
+      body {
+        font: normal 16px/1.5 Ubuntu, sans-serif;
+        margin: 100px;
+      }
+
+      .form-group {
+        margin-bottom: 1rem;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 0.5rem;
+      }
+
+      dice-textarea {
+        width: 100%;
+      }
+
+      input {
+        padding: 0.375rem 0.75rem;
+      }
+
+      dice-textarea::part(wrapper),
+      dice-textarea::part(textarea) {
+        max-height: 100px;
+      }
+
+      dice-textarea::part(wrapper) {
+        --padding: 0.375rem 0.75rem;
+      }
+
+      input,
+      dice-textarea::part(textarea) {
+        display: block;
+        width: 100%;
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1.5;
+        color: #212529;
+        border: 1px solid #ced4da;
+        appearance: none;
+        border-radius: 0.25rem;
+        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+      }
+
+      input:focus,
+      dice-textarea::part(textarea):focus-within {
+        border-color: #86b7fe;
+        outline: 0;
+        box-shadow: 0 0 0 0.25rem rgb(13 110 253 / 25%);
+      }
+
+      button {
+        --background-color: #6c757d;
+        --border-color: var(--background-color);
+
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        color: #fff;
+        font: inherit;
+        background-color: var(--background-color);
+        border: 1px solid var(--border-color);
+        padding: 0.375rem 0.75rem;
+        border-radius: 0.25rem;
+        transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
+          border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+      }
+
+      button:hover,
+      button:focus {
+        --background-color: #5c636a;
+      }
+    </style>
+  </head>
+  <body>
+    <form>
+      <div class="form-group">
+        <label for="name">Your name:</label>
+        <input type="text" name="name" id="name" />
+      </div>
+
+      <div class="form-group">
+        <label for="bio">Your biography:</label>
+        <dice-textarea
+          name="bio"
+          id="bio"
+          placeholder="Start writing..."
+          required
+          pattern="[0-9]{3}"
+        ></dice-textarea>
+      </div>
+
+      <button type="submit">Submit</button>
+    </form>
+    <p>Design by Bootstrap 5.</p>
+
+    <script src="textarea.js" defer></script>
+    <script>
+      document.querySelector("form").addEventListener("submit", (evt) => {
+        evt.preventDefault();
+
+        console.log(evt.target[1].value);
+      });
+
+      document.querySelector("dice-textarea").addEventListener("change", (evt) => {
+        console.log(evt.target.value);
+      });
+    </script>
+  </body>
+</html>
