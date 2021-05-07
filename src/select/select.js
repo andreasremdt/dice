@@ -4,12 +4,18 @@ class Select extends HTMLElement {
   #value = "";
   #open = false;
   #focused = 0;
+  #autofocus = this.hasAttribute("autofocus");
 
   connectedCallback() {
     this.#render();
     this.#internals.setFormValue(this.#value);
 
     document.addEventListener("keyup", this.#handleKeyDown);
+
+    var selected = this.#focusable.findIndex((child) => child.hasAttribute("selected"));
+
+    this.#focused = selected == -1 ? 0 : selected;
+    this.select(this.#focusable[this.#focused].getAttribute("value"));
   }
 
   disconnectedCallback() {
@@ -31,7 +37,7 @@ class Select extends HTMLElement {
     this.#root.querySelector("div").removeAttribute("hidden");
     this.#open = true;
 
-    this.children[this.#focused].focus();
+    this.#focusable[this.#focused].focus();
 
     document.addEventListener("click", this.#handleOuterClick);
   };
@@ -71,22 +77,22 @@ class Select extends HTMLElement {
 
     if (document.activeElement.isSameNode(this) || document.activeElement.parentElement.isSameNode(this)) {
       if (["ArrowDown", "ArrowUp", "ArrowLeft", "ArrowRight", "Home", "End"].includes(evt.key)) {
-        if (evt.key == "ArrowDown" && this.#focused != this.children.length - 1) {
+        if (evt.key == "ArrowDown" && this.#focused != this.#focusable.length - 1) {
           this.#focused++;
         } else if (evt.key == "ArrowUp" && this.#focused > 0) {
           this.#focused--;
-        } else if (evt.key == "ArrowRight" && !this.#open && this.#focused != this.children.length - 1) {
+        } else if (evt.key == "ArrowRight" && !this.#open && this.#focused != this.#focusable.length - 1) {
           this.#focused++;
         } else if (evt.key == "ArrowLeft" && !this.#open && this.#focused > 0) {
           this.#focused--;
         } else if (evt.key == "End") {
-          this.#focused = this.children.length - 1;
+          this.#focused = this.#focusable.length - 1;
         } else if (evt.key == "Home") {
           this.#focused = 0;
         }
 
-        this.children[this.#focused].focus();
-        this.select(this.children[this.#focused].getAttribute("value"));
+        this.#focusable[this.#focused].focus();
+        this.select(this.#focusable[this.#focused].getAttribute("value"));
       }
     }
   };
@@ -107,6 +113,10 @@ class Select extends HTMLElement {
     input.setAttribute("part", "input");
     input.setAttribute("readonly", "true");
     input.onclick = this.#handleClick;
+
+    if (this.#autofocus) {
+      input.setAttribute("autofocus", "true");
+    }
 
     dropdown.setAttribute("part", "dropdown");
     dropdown.setAttribute("hidden", "true");
@@ -137,6 +147,7 @@ class Select extends HTMLElement {
       input {
         width: 100%;
         box-sizing: border-box;
+        cursor: default;
       }
     `);
     sheet.insertRule(`
@@ -154,8 +165,28 @@ class Select extends HTMLElement {
     return sheet;
   }
 
+  get #focusable() {
+    return Array.from(this.children).filter((child) => !child.hasAttribute("disabled"));
+  }
+
   get value() {
     return this.#value;
+  }
+
+  set value(value) {
+    this.select(value);
+  }
+
+  get autofocus() {
+    return this.#autofocus;
+  }
+
+  set autofocus(value) {
+    this.#autofocus = value;
+
+    if (value) {
+      this.#root.querySelector("input").focus();
+    }
   }
 
   static formAssociated() {
@@ -165,30 +196,51 @@ class Select extends HTMLElement {
 
 class Option extends HTMLElement {
   #root = this.attachShadow({ mode: "open" });
+  #disabled = this.hasAttribute("disabled");
+  #selected = this.hasAttribute("selected");
+  #value = this.getAttribute("value");
+  #label = this.getAttribute("label") || this.textContent;
 
   connectedCallback() {
     this.#render();
+  }
 
-    if (this.hasAttribute("selected")) {
-      this.#handleSelect();
-    }
+  attributeChangedCallback(name, oldValue, newValue) {
+    // console.log(name, oldValue, newValue);
+    // if (name == "value" && oldValue && oldValue != newValue) {
+    //   this.#value = newValue;
+    // } else if (name == "selected" && oldValue && oldValue != newValue) {
+    //   this.selected = newValue == "true" ? true : false;
+    // } else if (name == "disabled" && oldValue && oldValue != newValue) {
+    //   this.disabled = newValue == "true" ? true : false;
+    // } else if (name == "label" && oldValue != newValue) {
+    //   this.label = newValue;
+    // }
   }
 
   focus() {
     this.#root.querySelector("button").focus();
   }
 
-  #handleSelect = () => {
-    this.parentNode.select(this.getAttribute("value"));
+  #handleSelect = (hide = true) => {
+    this.parentNode.select(this.#value);
+
+    if (hide) {
+      this.parentNode.hide();
+    }
   };
 
   #render() {
     var button = document.createElement("button");
 
-    button.innerHTML = this.innerHTML;
-    button.setAttribute("part", "listitem");
-    button.setAttribute("data-value", this.getAttribute("value"));
-    button.onclick = this.#handleSelect;
+    button.textContent = this.#label;
+    button.setAttribute("role", "option");
+    button.setAttribute("part", "option");
+    button.onmouseup = this.#handleSelect;
+
+    if (this.#disabled) {
+      button.setAttribute("disabled", true);
+    }
 
     this.#root.append(button);
     this.#root.adoptedStyleSheets = [this.#styles];
@@ -209,13 +261,66 @@ class Option extends HTMLElement {
       }
     `);
     sheet.insertRule(`
-      button:hover,
-      button:focus {
+      button:disabled {
+        color: rgba(0, 0, 0, .6);
+      }
+    `);
+    sheet.insertRule(`
+      button:not([disabled]):hover,
+      button:not([disabled]):focus {
         background-color: #ddd;
       }
     `);
 
     return sheet;
+  }
+
+  get selected() {
+    return this.#selected;
+  }
+
+  set selected(value) {
+    this.#selected = value;
+
+    this.#handleSelect(false);
+  }
+
+  get disabled() {
+    return this.#disabled;
+  }
+
+  set disabled(value) {
+    this.#disabled = value;
+
+    if (value) {
+      this.#root.querySelector("button").setAttribute("disabled", "true");
+    } else {
+      this.#root.querySelector("button").removeAttribute("disabled");
+    }
+
+    this.#root.adoptedStyleSheets = [this.#styles];
+  }
+
+  get label() {
+    return this.#label;
+  }
+
+  set label(value) {
+    this.#label = value;
+
+    this.#root.querySelector("button").textContent = value;
+  }
+
+  get value() {
+    return this.#value;
+  }
+
+  set value(value) {
+    this.#value = value;
+  }
+
+  static get observedAttributes() {
+    return ["selected", "value", "label", "disabled"];
   }
 }
 
