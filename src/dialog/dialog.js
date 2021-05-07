@@ -12,7 +12,17 @@ class Dialog extends HTMLElement {
     }
   }
 
-  showModal() {
+  attributeChangedCallback(name, _, newValue) {
+    if (name == "open" && newValue) {
+      if (newValue == "true") {
+        this.show();
+      } else {
+        this.hide();
+      }
+    }
+  }
+
+  show() {
     this.#root.querySelector("div").removeAttribute("hidden");
     this.#open = true;
     this.#lastElementFocused = document.activeElement;
@@ -24,7 +34,7 @@ class Dialog extends HTMLElement {
     document.addEventListener("keydown", this.#handleKeyDown);
   }
 
-  hideModal() {
+  hide() {
     this.#root.querySelector("div").setAttribute("hidden", "true");
     this.#open = false;
     this.#lastElementFocused.focus?.();
@@ -34,7 +44,7 @@ class Dialog extends HTMLElement {
 
   #handleKeyDown = (evt) => {
     if (evt.key == "Escape" && this.#open) {
-      this.hideModal();
+      this.hide();
     }
 
     if (evt.key == "Tab") {
@@ -123,9 +133,9 @@ class Dialog extends HTMLElement {
 
   set open(value) {
     if (value) {
-      this.showModal();
+      this.show();
     } else {
-      this.hideModal();
+      this.hide();
     }
   }
 
