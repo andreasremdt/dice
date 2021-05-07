@@ -1,8 +1,12 @@
 class Dropdown extends HTMLElement {
-  #root = this.attachShadow({ mode: "open" });
-  #open = this.hasAttribute("open");
-  #placement = this.getAttribute("placement") || "bottom";
-  #align = this.getAttribute("align") || "left";
+  #root = this.attachShadow({ mode: 'open' });
+
+  #open = this.hasAttribute('open');
+
+  #placement = this.getAttribute('placement') || 'bottom';
+
+  #align = this.getAttribute('align') || 'left';
+
   #focused = 0;
 
   connectedCallback() {
@@ -14,75 +18,75 @@ class Dropdown extends HTMLElement {
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
-    if (name == "open" && newValue) {
-      if (newValue == "true") {
+    if (name === 'open' && newValue) {
+      if (newValue === 'true') {
         this.show();
       } else {
         this.hide();
       }
-    } else if (name == "placement" && oldValue && oldValue != newValue) {
+    } else if (name === 'placement' && oldValue && oldValue !== newValue) {
       this.#placement = newValue;
       this.#root.adoptedStyleSheets = [this.#styles];
-    } else if (name == "align" && oldValue && oldValue != newValue) {
+    } else if (name === 'align' && oldValue && oldValue !== newValue) {
       this.#align = newValue;
       this.#root.adoptedStyleSheets = [this.#styles];
     }
   }
 
   show() {
-    document.addEventListener("keydown", this.#handleKeyDown);
-    document.addEventListener("click", this.#handleOuterClick);
+    document.addEventListener('keydown', this.#handleKeyDown);
+    document.addEventListener('click', this.#handleOuterClick);
 
     this.#open = true;
     this.#focused = -1;
-    this.#root.querySelector("div").removeAttribute("hidden");
-    this.#root.querySelector("button").setAttribute("aria-expanded", "true");
+    this.#root.querySelector('div').removeAttribute('hidden');
+    this.#root.querySelector('button').setAttribute('aria-expanded', 'true');
   }
 
   hide(focus = true) {
-    document.removeEventListener("keydown", this.#handleKeyDown);
-    document.removeEventListener("click", this.#handleOuterClick);
+    document.removeEventListener('keydown', this.#handleKeyDown);
+    document.removeEventListener('click', this.#handleOuterClick);
 
     this.#open = false;
-    this.#root.querySelector("div").setAttribute("hidden", "true");
-    this.#root.querySelector("button").setAttribute("aria-expanded", "false");
+    this.#root.querySelector('div').setAttribute('hidden', 'true');
+    this.#root.querySelector('button').setAttribute('aria-expanded', 'false');
 
     if (focus) {
-      this.#root.querySelector("button").focus();
+      this.#root.querySelector('button').focus();
     }
   }
 
   #handleOuterClick = ({ target }) => {
-    if (!target.closest("dice-dropdown")) {
+    if (!target.closest('dice-dropdown')) {
       this.hide();
     }
   };
 
   #handleKeyDown = (evt) => {
-    if (evt.key == "Escape") {
+    if (evt.key === 'Escape') {
       this.hide();
     }
 
-    if (["ArrowDown", "ArrowUp", "Tab", "Home", "End"].includes(evt.key)) {
-      if (evt.key == "ArrowDown" || (evt.key == "Tab" && !evt.shiftKey)) {
+    if (['ArrowDown', 'ArrowUp', 'Tab', 'Home', 'End'].includes(evt.key)) {
+      if (evt.key === 'ArrowDown' || (evt.key === 'Tab' && !evt.shiftKey)) {
         if (this.#focused < this.#focusable.length - 1) {
           evt.preventDefault();
 
-          this.#focused++;
-        } else if (evt.key == "Tab") {
+          this.#focused += 1;
+        } else if (evt.key === 'Tab') {
           this.hide(false);
         }
-      } else if (evt.key == "ArrowUp" || (evt.key == "Tab" && evt.shiftKey)) {
+      } else if (evt.key === 'ArrowUp' || (evt.key === 'Tab' && evt.shiftKey)) {
         if (this.#focused > 0) {
           evt.preventDefault();
 
-          this.#focused--;
-        } else if (evt.key == "Tab" && document.activeElement.isEqualNode(this)) {
+          this.#focused -= 1;
+        } else if (evt.key === 'Tab' && document.activeElement.isEqualNode(this)) {
           this.hide(false);
         }
-      } else if (evt.key == "Home") {
+      } else if (evt.key === 'Home') {
         this.#focused = 0;
-      } else if (evt.key == "End") {
+      } else if (evt.key === 'End') {
         this.#focused = this.#focusable.length - 1;
       }
 
@@ -99,26 +103,26 @@ class Dropdown extends HTMLElement {
   };
 
   #render() {
-    this.#root.innerHTML = "";
+    this.#root.innerHTML = '';
 
-    var button = document.createElement("button");
-    var menu = document.createElement("div");
-    var buttonSlot = document.createElement("slot");
-    var menuSlot = document.createElement("slot");
+    const button = document.createElement('button');
+    const menu = document.createElement('div');
+    const buttonSlot = document.createElement('slot');
+    const menuSlot = document.createElement('slot');
 
-    button.setAttribute("part", "button");
-    button.setAttribute("id", this.#uid);
-    button.setAttribute("aria-expanded", this.#open ? "true" : "false");
+    button.setAttribute('part', 'button');
+    button.setAttribute('id', this.#uid);
+    button.setAttribute('aria-expanded', this.#open ? 'true' : 'false');
     button.onclick = this.#handleToggle;
     button.append(buttonSlot);
 
-    menu.setAttribute("part", "menu");
-    menu.setAttribute("role", "menu");
-    menu.setAttribute("aria-labelledby", button.id);
-    menu.setAttribute("hidden", "true");
+    menu.setAttribute('part', 'menu');
+    menu.setAttribute('role', 'menu');
+    menu.setAttribute('aria-labelledby', button.id);
+    menu.setAttribute('hidden', 'true');
     menu.append(menuSlot);
 
-    menuSlot.setAttribute("name", "menu");
+    menuSlot.setAttribute('name', 'menu');
 
     this.#root.append(button, menu);
     this.#root.adoptedStyleSheets = [this.#styles];
@@ -141,7 +145,7 @@ class Dropdown extends HTMLElement {
   }
 
   set placement(value) {
-    if (["top", "bottom", "right", "left"].includes(value)) {
+    if (['top', 'bottom', 'right', 'left'].includes(value)) {
       this.#placement = value;
       this.#root.adoptedStyleSheets = [this.#styles];
     }
@@ -152,7 +156,7 @@ class Dropdown extends HTMLElement {
   }
 
   set align(value) {
-    if (["top", "bottom", "right", "left"].includes(value)) {
+    if (['top', 'bottom', 'right', 'left'].includes(value)) {
       this.#align = value;
       this.#root.adoptedStyleSheets = [this.#styles];
     }
@@ -160,20 +164,20 @@ class Dropdown extends HTMLElement {
 
   get #focusable() {
     return this.querySelectorAll(
-      "a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), iframe, object, embed, *[tabindex], *[contenteditable]"
+      'a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), iframe, object, embed, *[tabindex], *[contenteditable]',
     );
   }
 
   get #uid() {
-    var first = Math.floor(Math.random() * 46656);
-    var second = Math.floor(Math.random() * 46656);
+    const first = Math.floor(Math.random() * 46656);
+    const second = Math.floor(Math.random() * 46656);
 
     return first.toString(36) + second.toString(36);
   }
 
   get #styles() {
-    var sheet = new CSSStyleSheet();
-    var button = this.#root.querySelector("button");
+    const sheet = new CSSStyleSheet();
+    const button = this.#root.querySelector('button');
 
     sheet.insertRule(`
       :host {
@@ -192,18 +196,16 @@ class Dropdown extends HTMLElement {
       }
     `);
 
-    if (this.#placement == "bottom" || this.#placement == "top") {
+    if (this.#placement === 'bottom' || this.#placement === 'top') {
       sheet.insertRule(`div {
-        ${this.#placement == "bottom" ? "top" : "bottom"}: calc(${
-        button.offsetHeight
-      }px + var(--spacing));
+        ${this.#placement === 'bottom' ? 'top' : 'bottom'}: calc(${button.offsetHeight}px + var(--spacing));
         ${this.#align}: 0;
       }`);
     }
 
-    if (this.#placement == "right" || this.#placement == "left") {
+    if (this.#placement === 'right' || this.#placement === 'left') {
       sheet.insertRule(`div {
-        ${this.#placement == "right" ? "left" : "right"}: calc(100% + var(--spacing));
+        ${this.#placement === 'right' ? 'left' : 'right'}: calc(100% + var(--spacing));
         ${this.#align}: 0;
       }`);
     }
@@ -212,8 +214,8 @@ class Dropdown extends HTMLElement {
   }
 
   static get observedAttributes() {
-    return ["open", "align", "placement"];
+    return ['open', 'align', 'placement'];
   }
 }
 
-window.customElements.define("dice-dropdown", Dropdown);
+window.customElements.define('dice-dropdown', Dropdown);

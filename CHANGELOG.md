@@ -3,6 +3,23 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.11-alpha] - 2021-05-07
+
+- Added a build pipeline with [rollup](https://rollupjs.org/)
+- Added [ESLint](https://eslint.org/)
+
+### `dice-select`
+
+- Improved keyboard navigation
+- Improved accessibility
+- Added public API
+- Moved the component into a dedicated folder
+
+### `dice-dialog`
+
+- Fix attributes (`open`) not being observed when changed
+- Rename public API from `showModal()` and `hideModal()` to `show()` and `hide()` for better alignment with other components
+
 ## [0.0.10-alpha] - 2021-05-02
 
 ### `dice-textarea`

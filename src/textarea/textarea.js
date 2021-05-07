@@ -1,24 +1,30 @@
 const VALIDATION_MESSAGES = {
-  valueMissing: () => "Please fill out this field.",
+  valueMissing: () => 'Please fill out this field.',
   tooShort: (requiredLength, actualLength) =>
     `Please lengthen this text to ${requiredLength} characters or more (you are currently using ${actualLength} character${
-      actualLength != 1 ? "s" : ""
+      actualLength !== 1 ? 's' : ''
     }).`,
   tooLong: (requiredLength, actualLength) =>
     `Please shorten this text to ${requiredLength} characters or less (you are currently using ${actualLength} character${
-      actualLength != 1 ? "s" : ""
+      actualLength !== 1 ? 's' : ''
     }).`,
-  patternMismatch: () => "Please match the requested format.",
+  patternMismatch: () => 'Please match the requested format.',
 };
 
 class Textarea extends HTMLElement {
   #internals = this.attachInternals();
-  #root = this.attachShadow({ mode: "open" });
-  #value = this.textContent || this.getAttribute("value") || "";
-  #required = this.hasAttribute("required");
-  #minLength = this.getAttribute("minlength");
-  #maxLength = this.getAttribute("maxlength");
-  #pattern = this.hasAttribute("pattern") && new RegExp(this.getAttribute("pattern"));
+
+  #root = this.attachShadow({ mode: 'open' });
+
+  #value = this.textContent || this.getAttribute('value') || '';
+
+  #required = this.hasAttribute('required');
+
+  #minLength = this.getAttribute('minlength');
+
+  #maxLength = this.getAttribute('maxlength');
+
+  #pattern = this.hasAttribute('pattern') && new RegExp(this.getAttribute('pattern'));
 
   connectedCallback() {
     this.#render();
@@ -27,51 +33,52 @@ class Textarea extends HTMLElement {
   }
 
   focus() {
-    this.#root.querySelector("textarea").focus();
+    this.#root.querySelector('textarea').focus();
   }
 
   blur() {
-    this.#root.querySelector("textarea").blur();
+    this.#root.querySelector('textarea').blur();
   }
 
   select() {
-    this.#root.querySelector("textarea").select();
+    this.#root.querySelector('textarea').select();
   }
 
   setRangeText(...args) {
-    this.#root.querySelector("textarea").setRangeText(...args);
+    this.#root.querySelector('textarea').setRangeText(...args);
   }
 
   setSelectionRange(...args) {
-    this.#root.querySelector("textarea").setSelectionRange(...args);
+    this.#root.querySelector('textarea').setSelectionRange(...args);
   }
 
-  #handleInput = ({ target }) => {
-    target.parentNode.dataset.value = target.value;
+  #handleInput = (evt) => {
+    const { dataset } = evt.target.parentNode;
 
-    this.#value = target.value;
+    dataset.value = evt.target.value;
+    this.#value = evt.target.value;
     this.#internals.setFormValue(this.#value);
     this.#handleValidation();
   };
 
   #handleChange = (evt) => {
     this.dispatchEvent(
-      new CustomEvent("change", {
+      new CustomEvent('change', {
         detail: {
           value: evt.target.value,
         },
-      })
+      }),
     );
   };
 
   #handleValidation() {
-    if (this.#value == "" && this.#required) {
+    if (this.#value === '' && this.#required) {
       this.#internals.setValidity(
         {
           valueMissing: true,
         },
         VALIDATION_MESSAGES.valueMissing(),
-        this.#root.querySelector("textarea")
+        this.#root.querySelector('textarea'),
       );
     } else if (this.#minLength && this.#value.length < Number(this.#minLength)) {
       this.#internals.setValidity(
@@ -79,7 +86,7 @@ class Textarea extends HTMLElement {
           tooShort: true,
         },
         VALIDATION_MESSAGES.tooShort(this.#minLength, this.value.length),
-        this.#root.querySelector("textarea")
+        this.#root.querySelector('textarea'),
       );
     } else if (this.#maxLength && this.#value.length > Number(this.#maxLength)) {
       this.#internals.setValidity(
@@ -87,7 +94,7 @@ class Textarea extends HTMLElement {
           tooLong: true,
         },
         VALIDATION_MESSAGES.tooShort(this.#maxLength, this.value.length),
-        this.#root.querySelector("textarea")
+        this.#root.querySelector('textarea'),
       );
     } else if (this.#pattern && !this.#pattern.test(this.#value)) {
       this.#internals.setValidity(
@@ -95,7 +102,7 @@ class Textarea extends HTMLElement {
           patternMismatch: true,
         },
         VALIDATION_MESSAGES.patternMismatch(),
-        this.#root.querySelector("textarea")
+        this.#root.querySelector('textarea'),
       );
     } else {
       this.#internals.setValidity({});
@@ -103,23 +110,23 @@ class Textarea extends HTMLElement {
   }
 
   #render() {
-    var textarea = document.createElement("textarea");
-    var div = document.createElement("div");
+    const textarea = document.createElement('textarea');
+    const div = document.createElement('div');
 
-    div.setAttribute("part", "wrapper");
+    div.setAttribute('part', 'wrapper');
     div.append(textarea);
 
-    for (let attribute of this.attributes) {
+    for (const attribute of this.attributes) {
       textarea.setAttributeNode(attribute.cloneNode());
     }
 
-    textarea.setAttribute("part", "textarea");
+    textarea.setAttribute('part', 'textarea');
     textarea.value = this.#value;
     textarea.oninput = this.#handleInput;
     textarea.onchange = this.#handleChange;
 
-    if (textarea.hasAttribute("id")) {
-      var label = document.querySelector(`label[for="${textarea.getAttribute("id")}"]`);
+    if (textarea.hasAttribute('id')) {
+      const label = document.querySelector(`label[for="${textarea.getAttribute('id')}"]`);
 
       if (label) label.onclick = () => textarea.focus();
     }
@@ -135,7 +142,7 @@ class Textarea extends HTMLElement {
   set value(newValue) {
     this.#value = newValue;
     this.#internals.setFormValue(newValue);
-    this.#root.querySelector("textarea").value = newValue;
+    this.#root.querySelector('textarea').value = newValue;
     this.#handleValidation();
   }
 
@@ -172,10 +179,10 @@ class Textarea extends HTMLElement {
   }
 
   get #styles() {
-    var sheet = new CSSStyleSheet();
+    const sheet = new CSSStyleSheet();
 
-    sheet.insertRule(":host { display: inline-block; }");
-    sheet.insertRule("div { display: grid; --padding: 0; }");
+    sheet.insertRule(':host { display: inline-block; }');
+    sheet.insertRule('div { display: grid; --padding: 0; }');
     sheet.insertRule(`
       div::after, textarea {
         grid-area: 1 / 1 / 2 / 2;
@@ -205,8 +212,8 @@ class Textarea extends HTMLElement {
   }
 
   static get observedAttributes() {
-    return ["value", "name", "id", "placeholder", "required"];
+    return ['value', 'name', 'id', 'placeholder', 'required'];
   }
 }
 
-window.customElements.define("dice-textarea", Textarea);
+window.customElements.define('dice-textarea', Textarea);

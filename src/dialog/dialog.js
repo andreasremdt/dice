@@ -1,20 +1,23 @@
 class Dialog extends HTMLElement {
-  #root = this.attachShadow({ mode: "open" });
-  #open = this.hasAttribute("open");
+  #root = this.attachShadow({ mode: 'open' });
+
+  #open = this.hasAttribute('open');
+
   #lastElementFocused = null;
+
   #focused = 0;
 
   connectedCallback() {
     this.#render();
 
     if (this.#open) {
-      document.addEventListener("keydown", this.#handleKeyDown);
+      document.addEventListener('keydown', this.#handleKeyDown);
     }
   }
 
   attributeChangedCallback(name, _, newValue) {
-    if (name == "open" && newValue) {
-      if (newValue == "true") {
+    if (name === 'open' && newValue) {
+      if (newValue === 'true') {
         this.show();
       } else {
         this.hide();
@@ -23,7 +26,7 @@ class Dialog extends HTMLElement {
   }
 
   show() {
-    this.#root.querySelector("div").removeAttribute("hidden");
+    this.#root.querySelector('div').removeAttribute('hidden');
     this.#open = true;
     this.#lastElementFocused = document.activeElement;
 
@@ -31,37 +34,35 @@ class Dialog extends HTMLElement {
       this.#focusable[this.#focused].focus();
     }
 
-    document.addEventListener("keydown", this.#handleKeyDown);
+    document.addEventListener('keydown', this.#handleKeyDown);
   }
 
   hide() {
-    this.#root.querySelector("div").setAttribute("hidden", "true");
+    this.#root.querySelector('div').setAttribute('hidden', 'true');
     this.#open = false;
     this.#lastElementFocused.focus?.();
 
-    document.removeEventListener("keydown", this.#handleKeyDown);
+    document.removeEventListener('keydown', this.#handleKeyDown);
   }
 
   #handleKeyDown = (evt) => {
-    if (evt.key == "Escape" && this.#open) {
+    if (evt.key === 'Escape' && this.#open) {
       this.hide();
     }
 
-    if (evt.key == "Tab") {
+    if (evt.key === 'Tab') {
       evt.preventDefault();
 
       if (evt.shiftKey) {
-        if (this.#focused == 0) {
+        if (this.#focused === 0) {
           this.#focused = this.#focusable.length - 1;
         } else {
-          this.#focused--;
+          this.#focused -= 1;
         }
+      } else if (this.#focused === this.#focusable.length - 1) {
+        this.#focused = 0;
       } else {
-        if (this.#focused == this.#focusable.length - 1) {
-          this.#focused = 0;
-        } else {
-          this.#focused++;
-        }
+        this.#focused += 1;
       }
 
       this.#focusable[this.#focused].focus();
@@ -69,24 +70,24 @@ class Dialog extends HTMLElement {
   };
 
   #render() {
-    var backdrop = document.createElement("div");
-    var dialog = document.createElement("div");
-    var slot = document.createElement("slot");
+    const backdrop = document.createElement('div');
+    const dialog = document.createElement('div');
+    const slot = document.createElement('slot');
 
     if (!this.#open) {
-      backdrop.setAttribute("hidden", true);
+      backdrop.setAttribute('hidden', true);
     }
 
-    backdrop.setAttribute("part", "backdrop");
+    backdrop.setAttribute('part', 'backdrop');
     backdrop.append(dialog);
 
-    if (this.hasAttribute("aria-labelledby")) {
-      dialog.setAttribute("aria-labelledby", this.getAttribute("aria-labelledby"));
+    if (this.hasAttribute('aria-labelledby')) {
+      dialog.setAttribute('aria-labelledby', this.getAttribute('aria-labelledby'));
     }
 
-    dialog.setAttribute("part", "dialog");
-    dialog.setAttribute("role", "dialog");
-    dialog.setAttribute("aria-modal", "true");
+    dialog.setAttribute('part', 'dialog');
+    dialog.setAttribute('role', 'dialog');
+    dialog.setAttribute('aria-modal', 'true');
     dialog.append(slot);
 
     this.#root.append(backdrop);
@@ -94,7 +95,7 @@ class Dialog extends HTMLElement {
   }
 
   get #styles() {
-    var sheet = new CSSStyleSheet();
+    const sheet = new CSSStyleSheet();
 
     sheet.insertRule(`div[part="backdrop"] {
       position: absolute;
@@ -123,7 +124,7 @@ class Dialog extends HTMLElement {
 
   get #focusable() {
     return this.querySelectorAll(
-      "a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), iframe, object, embed, *[tabindex], *[contenteditable]"
+      'a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), iframe, object, embed, *[tabindex], *[contenteditable]',
     );
   }
 
@@ -140,8 +141,8 @@ class Dialog extends HTMLElement {
   }
 
   static get observedAttributes() {
-    return ["open"];
+    return ['open'];
   }
 }
 
-window.customElements.define("dice-dialog", Dialog);
+window.customElements.define('dice-dialog', Dialog);

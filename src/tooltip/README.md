@@ -94,7 +94,7 @@ dice-tooltip::part(tooltip) {
 }
 
 dice-tooltip::part(tooltip)::before {
-  content: "";
+  content: '';
   position: absolute;
   width: 0;
   height: 0;
@@ -130,7 +130,7 @@ If a child element is focused, the tooltip is also shown, while it's hidden when
 You can programmatically show or hide a tooltip by calling the appropriate methods:
 
 ```js
-var tooltip = document.querySelector("dice-tooltip");
+var tooltip = document.querySelector('dice-tooltip');
 
 // Makes the tooltip appear
 tooltip.show();
@@ -144,7 +144,7 @@ tooltip.hide();
 Alternatively to the above methods, you can set the `open` property:
 
 ```js
-var tooltip = document.querySelector("dice-tooltip");
+var tooltip = document.querySelector('dice-tooltip');
 
 // Makes the tooltip appear
 tooltip.open = true;
@@ -158,19 +158,19 @@ The `open` property also reflects the current state, meaning that if the tooltip
 If you want to change the placement and content after the component has been rendered, you can do so via the appropriate properties:
 
 ```js
-var tooltip = document.querySelector("dice-tooltip");
+var tooltip = document.querySelector('dice-tooltip');
 
-tooltip.placement = "right";
-tooltip.content = "Updated content";
+tooltip.placement = 'right';
+tooltip.content = 'Updated content';
 ```
 
 The same task can be achieved by updating the attributes:
 
 ```js
-var tooltip = document.querySelector("dice-tooltip");
+var tooltip = document.querySelector('dice-tooltip');
 
-tooltip.setAttribute("placement", "right");
-tooltip.setAttribute("content", "Updated content");
-tooltip.setAttribute("template", "templateId123");
-tooltip.removeAttribute("open");
+tooltip.setAttribute('placement', 'right');
+tooltip.setAttribute('content', 'Updated content');
+tooltip.setAttribute('template', 'templateId123');
+tooltip.removeAttribute('open');
 ```

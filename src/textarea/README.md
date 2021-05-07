@@ -53,7 +53,7 @@ The `dice-textarea` is pretty much identical to the native `textarea` element, h
 The `dice-textarea` element, if wrapped in a form, works as a form element and can provide its `value` like any other input element.
 
 ```js
-document.querySelector("form").addEventListener("submit", (evt) => {
+document.querySelector('form').addEventListener('submit', (evt) => {
   evt.preventDefault();
 
   // Given that the first element is `dice-textarea`:
@@ -64,13 +64,13 @@ document.querySelector("form").addEventListener("submit", (evt) => {
 Alternatively, you can use the FormData API to collect form values. Remember to set a `name` attribute to the `dice-textarea`:
 
 ```js
-document.querySelector("form").addEventListener("submit", (evt) => {
+document.querySelector('form').addEventListener('submit', (evt) => {
   evt.preventDefault();
 
   var formData = new FormData(evt.target);
 
   // Given that the `dice-textarea` has a `name` attribute of "bio":
-  console.log(formData.get("bio"));
+  console.log(formData.get('bio'));
 });
 ```
 
@@ -79,16 +79,16 @@ document.querySelector("form").addEventListener("submit", (evt) => {
 `dice-textarea` emits the same events as the native `textarea` element, hence you can just add event listeners like so:
 
 ```js
-document.querySelector("dice-textarea").addEventListener("change", (evt) => {
+document.querySelector('dice-textarea').addEventListener('change', (evt) => {
   console.log(evt.target.value);
 });
 
-document.querySelector("dice-textarea").addEventListener("focus", (evt) => {
-  console.log("focused");
+document.querySelector('dice-textarea').addEventListener('focus', (evt) => {
+  console.log('focused');
 });
 
-document.querySelector("dice-textarea").addEventListener("blur", (evt) => {
-  console.log("blurred");
+document.querySelector('dice-textarea').addEventListener('blur', (evt) => {
+  console.log('blurred');
 });
 ```
 
@@ -97,10 +97,10 @@ document.querySelector("dice-textarea").addEventListener("blur", (evt) => {
 All valid `textarea` properties (like `maxLength`, `required`, or `value`) are reflected via properties and can be accessed or set:
 
 ```js
-var textarea = document.querySelector("dice-textarea");
+var textarea = document.querySelector('dice-textarea');
 
 // Sets the new value
-textarea.value = "123";
+textarea.value = '123';
 
 // Gets the current value
 console.log(textarea.value);
@@ -109,11 +109,11 @@ console.log(textarea.value);
 The same task can be achieved by updating the attributes:
 
 ```js
-var textarea = document.querySelector("dice-textarea");
+var textarea = document.querySelector('dice-textarea');
 
 // Sets the new value
-textarea.setAttribute("value", "123");
+textarea.setAttribute('value', '123');
 
 // Gets the current value
-console.log(textarea.getAttribute("value"));
+console.log(textarea.getAttribute('value'));
 ```

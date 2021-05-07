@@ -38,3 +38,4 @@ This library, its components and the documentation are still under active develo
 - [Tabs](src/tabs)
 - [Tooltip](src/tooltip)
 - [Textarea](src/textarea)
+- [Select](src/select)

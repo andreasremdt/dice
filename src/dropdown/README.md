@@ -106,7 +106,7 @@ You can also use the Arrow Up & Arrow Down keys to navigate between elements. Pr
 You can programmatically show or hide the dropdown by calling the appropriate methods:
 
 ```js
-var dropdown = document.querySelector("dice-dropdown");
+var dropdown = document.querySelector('dice-dropdown');
 
 // Makes the dropdown appear
 dropdown.show();
@@ -120,7 +120,7 @@ dropdown.hide();
 Alternatively to the above methods, you can set the `open` property:
 
 ```js
-var dropdown = document.querySelector("dice-dropdown");
+var dropdown = document.querySelector('dice-dropdown');
 
 // Makes the dropdown appear
 dropdown.open = true;
@@ -134,19 +134,19 @@ The `open` property also reflects the current state, meaning that if the dropdow
 If you want to change the placement and alignment after the component has been rendered, you can do so via the appropriate properties:
 
 ```js
-var dropdown = document.querySelector("dice-dropdown");
+var dropdown = document.querySelector('dice-dropdown');
 
 // This will change the position of the dropdown
-dropdown.placement = "right";
-dropdown.align = "top";
+dropdown.placement = 'right';
+dropdown.align = 'top';
 ```
 
 The same task can be achieved by updating the attributes:
 
 ```js
-var dropdown = document.querySelector("dice-dropdown");
+var dropdown = document.querySelector('dice-dropdown');
 
 // This will change the position of the dropdown
-dropdown.setAttribute("placement", "right");
-dropdown.setAttribute("align", "top");
+dropdown.setAttribute('placement', 'right');
+dropdown.setAttribute('align', 'top');
 ```

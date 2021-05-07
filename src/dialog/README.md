@@ -71,7 +71,7 @@ Pressing ESC closes the dialog.
 You can programmatically show or hide a dialog by calling the appropriate methods:
 
 ```js
-var dialog = document.querySelector("dice-dialog");
+var dialog = document.querySelector('dice-dialog');
 
 // Makes the dialog appear
 dropdown.showModal();
@@ -87,7 +87,7 @@ _Note:_ these methods where named to be as close as possible to the native [dial
 Alternatively to the above methods, you can set the `open` property:
 
 ```js
-var dialog = document.querySelector("dice-dialog");
+var dialog = document.querySelector('dice-dialog');
 
 // Makes the dialog appear
 dialog.open = true;

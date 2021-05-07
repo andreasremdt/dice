@@ -91,9 +91,9 @@ Pressing "Home" will focus the first tab button, pressing "End" will focus the l
 You can programmatically show a certain tab via its unique ID by calling the `show` method:
 
 ```js
-var tabs = document.querySelector("dice-tabs");
+var tabs = document.querySelector('dice-tabs');
 
-tabs.show("some-id");
+tabs.show('some-id');
 ```
 
 ### Properties
@@ -101,9 +101,9 @@ tabs.show("some-id");
 Alternatively to the above methods, you can set the `active` property:
 
 ```js
-var tabs = document.querySelector("dice-tabs");
+var tabs = document.querySelector('dice-tabs');
 
-tabs.active = "some-id";
+tabs.active = 'some-id';
 ```
 
 The `active` property also reflects the current state, meaning the ID of the tab which is currently visible.
@@ -111,7 +111,7 @@ The `active` property also reflects the current state, meaning the ID of the tab
 You can also change the `aria-label` by setting the `label` property:
 
 ```js
-var tabs = document.querySelector("dice-tabs");
+var tabs = document.querySelector('dice-tabs');
 
-tabs.label = "A new label";
+tabs.label = 'A new label';
 ```

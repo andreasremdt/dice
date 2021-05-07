@@ -71,8 +71,8 @@
         border: 1px solid var(--border-color);
         padding: 0.375rem 0.75rem;
         border-radius: 0.25rem;
-        transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
-          border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out,
+          box-shadow 0.15s ease-in-out;
       }
 
       button:hover,
@@ -90,13 +90,7 @@
 
       <div class="form-group">
         <label for="bio">Your biography:</label>
-        <dice-textarea
-          name="bio"
-          id="bio"
-          placeholder="Start writing..."
-          required
-          pattern="[0-9]{3}"
-        ></dice-textarea>
+        <dice-textarea name="bio" id="bio" placeholder="Start writing..." required pattern="[0-9]{3}"></dice-textarea>
       </div>
 
       <button type="submit">Submit</button>
@@ -105,13 +99,13 @@
 
     <script src="textarea.js" defer></script>
     <script>
-      document.querySelector("form").addEventListener("submit", (evt) => {
+      document.querySelector('form').addEventListener('submit', (evt) => {
         evt.preventDefault();
 
         console.log(evt.target[1].value);
       });
 
-      document.querySelector("dice-textarea").addEventListener("change", (evt) => {
+      document.querySelector('dice-textarea').addEventListener('change', (evt) => {
         console.log(evt.target.value);
       });
     </script>
