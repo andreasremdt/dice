@@ -1,3 +1,5 @@
+import './option.js';
+
 class Select extends HTMLElement {
   #root = this.attachShadow({ mode: 'open' });
 
