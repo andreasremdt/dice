@@ -126,13 +126,28 @@ class Select extends HTMLElement {
       }
     `);
     sheet.insertRule(`
+      :host::after {
+        content: "▾";
+        position: absolute;
+        top: 0;
+        right: 7px;
+      }
+    `);
+    sheet.insertRule(`
+      input {
+        width: 100%;
+        box-sizing: border-box;
+      }
+    `);
+    sheet.insertRule(`
       div {
         position: absolute;
         background-color: white;
-        min-width: ${input.offsetWidth}px;
+        width: 100%;
+        box-sizing: border-box;
         border: 1px solid;
         left: 0;
-        top: ${input.offsetHeight}px;
+        top: 100%;
       }
     `);
 
