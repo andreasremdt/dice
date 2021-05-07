@@ -8,6 +8,16 @@ class Select extends HTMLElement {
   connectedCallback() {
     this.#render();
     this.#internals.setFormValue(this.#value);
+
+    document.addEventListener("keyup", this.#handleKeyDown);
+  }
+
+  disconnectedCallback() {
+    document.removeEventListener("keyup", this.#handleKeyDown);
+  }
+
+  attributeChangedCallack(name, oldValue, newValue) {
+    console.log(name, oldValue, newValue);
   }
 
   select(value) {
@@ -15,61 +25,77 @@ class Select extends HTMLElement {
     this.#internals.setFormValue(this.#value);
 
     this.#root.querySelector("input").value = this.#value;
-
-    if (this.#open) {
-      this.#handleClose();
-    }
   }
 
-  #handleOpen = () => {
+  show = () => {
     this.#root.querySelector("div").removeAttribute("hidden");
     this.#open = true;
+
     this.children[this.#focused].focus();
 
-    document.addEventListener("keydown", this.#handleKeyDown);
+    document.addEventListener("click", this.#handleOuterClick);
   };
 
-  #handleClose = () => {
+  hide = () => {
     this.#root.querySelector("div").setAttribute("hidden", "true");
     this.#root.querySelector("input").focus();
     this.#open = false;
 
-    document.removeEventListener("keydown", this.#handleKeyDown);
+    document.removeEventListener("click", this.#handleOuterClick);
   };
 
-  #handleInputKeyDown = (evt) => {
-    if (evt.key == "Enter" && !this.#open) {
-      this.#handleOpen();
-    }
-
-    if (evt.key == "ArrowDown") {
-      if (this.#focused != this.children.length - 1) {
-        this.select(this.children[++this.#focused].getAttribute("value"));
-      }
-    }
-
-    if (evt.key == "ArrowUp") {
-      if (this.#focused > 0) {
-        this.select(this.children[--this.#focused].getAttribute("value"));
-      }
+  #handleOuterClick = ({ target }) => {
+    if (!target.closest("dice-select")) {
+      this.hide();
     }
   };
 
   #handleKeyDown = (evt) => {
-    if (evt.key == "Escape" && this.#open) {
-      this.#handleClose();
-    }
+    if (["Enter", "Escape", "Tab"].includes(evt.key)) {
+      if (evt.key == "Escape" && this.#open) {
+        this.hide();
+      }
 
-    if (evt.key == "ArrowDown") {
-      if (this.#focused != this.children.length - 1) {
-        this.children[++this.#focused].focus();
+      if (evt.key == "Enter") {
+        if (document.activeElement.isSameNode(this) && !this.#open) {
+          this.show();
+        } else if (this.#open) {
+          this.hide();
+        }
+      }
+
+      if (evt.key == "Tab" && this.#open) {
+        this.hide();
       }
     }
 
-    if (evt.key == "ArrowUp") {
-      if (this.#focused > 0) {
-        this.children[--this.#focused].focus();
+    if (document.activeElement.isSameNode(this) || document.activeElement.parentElement.isSameNode(this)) {
+      if (["ArrowDown", "ArrowUp", "ArrowLeft", "ArrowRight", "Home", "End"].includes(evt.key)) {
+        if (evt.key == "ArrowDown" && this.#focused != this.children.length - 1) {
+          this.#focused++;
+        } else if (evt.key == "ArrowUp" && this.#focused > 0) {
+          this.#focused--;
+        } else if (evt.key == "ArrowRight" && !this.#open && this.#focused != this.children.length - 1) {
+          this.#focused++;
+        } else if (evt.key == "ArrowLeft" && !this.#open && this.#focused > 0) {
+          this.#focused--;
+        } else if (evt.key == "End") {
+          this.#focused = this.children.length - 1;
+        } else if (evt.key == "Home") {
+          this.#focused = 0;
+        }
+
+        this.children[this.#focused].focus();
+        this.select(this.children[this.#focused].getAttribute("value"));
       }
+    }
+  };
+
+  #handleClick = () => {
+    if (this.#open) {
+      this.hide();
+    } else {
+      this.show();
     }
   };
 
@@ -80,8 +106,7 @@ class Select extends HTMLElement {
 
     input.setAttribute("part", "input");
     input.setAttribute("readonly", "true");
-    input.onclick = this.#handleOpen;
-    input.onkeydown = this.#handleInputKeyDown;
+    input.onclick = this.#handleClick;
 
     dropdown.setAttribute("part", "dropdown");
     dropdown.setAttribute("hidden", "true");
@@ -93,7 +118,6 @@ class Select extends HTMLElement {
 
   get #styles() {
     var sheet = new CSSStyleSheet();
-    var input = this.#root.querySelector("input");
 
     sheet.insertRule(`
       :host {
