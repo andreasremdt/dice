@@ -59,8 +59,9 @@ class Option extends HTMLElement {
 
     sheet.insertRule(`
       button {
-        all: inherit;
+        all: unset;
         width: 100%;
+        min-height: 24px;
       }
     `);
     sheet.insertRule(`

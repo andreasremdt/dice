@@ -13,29 +13,42 @@
     </style>
   </head>
   <body>
-    <input type="text" />
-    <dice-select name="selection" searchable>
-      <dice-option value="123">123</dice-option>
-      <dice-option value="456" selected>456</dice-option>
-      <dice-option value="789">789</dice-option>
-      <dice-option value="123" label="123"></dice-option>
-      <dice-option value="456" disabled label="456"></dice-option>
-      <dice-option value="789" disabled>789</dice-option>
-    </dice-select>
+    <form>
+      <input type="text" />
+      <dice-select name="selection" required>
+        <dice-option value=""></dice-option>
+        <dice-option value="123">123</dice-option>
+        <dice-option value="456" selected>456</dice-option>
+        <dice-option value="789">789</dice-option>
+        <dice-option value="123" label="123"></dice-option>
+        <dice-option value="456" disabled label="456"></dice-option>
+        <dice-option value="789" disabled>789</dice-option>
+      </dice-select>
 
-    <select>
-      <option value="123">123</option>
-      <option value="456" selected>456</option>
-      <option value="789">789</option>
-      <option value="123">123</option>
-      <option value="456" disabled>456</option>
-      <option value="789" disabled>789</option>
-    </select>
+      <select required>
+        <option></option>
+        <option value="123">123</option>
+        <option value="456">456</option>
+        <option value="789">789</option>
+        <option value="123">123</option>
+        <option value="456" disabled>456</option>
+        <option value="789" disabled>789</option>
+      </select>
 
-    <input type="datetime-local" />
+      <button type="submit">Submit</button>
+    </form>
 
     <p>Design by Bootstrap 5.</p>
 
     <script src="select.js" type="module"></script>
+    <script>
+      document.querySelector('form').addEventListener('submit', (evt) => {
+        evt.preventDefault();
+
+        const d = new FormData(evt.target);
+        console.log(d.get('selection'));
+        console.dir(evt.target[1].value);
+      });
+    </script>
   </body>
 </html>

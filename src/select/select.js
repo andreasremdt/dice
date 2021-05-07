@@ -15,6 +15,10 @@ class Select extends HTMLElement {
 
   #searchable = this.hasAttribute('searchable');
 
+  #disabled = this.hasAttribute('disabled');
+
+  #required = this.hasAttribute('required');
+
   connectedCallback() {
     this.#render();
     this.#internals.setFormValue(this.#value);
@@ -36,6 +40,7 @@ class Select extends HTMLElement {
     this.#internals.setFormValue(this.#value);
 
     this.#root.querySelector('input').value = this.#value;
+    this.#handleValidation();
   }
 
   show = () => {
@@ -54,6 +59,20 @@ class Select extends HTMLElement {
 
     document.removeEventListener('click', this.#handleOuterClick);
   };
+
+  #handleValidation() {
+    if (this.#value === '' && this.#required) {
+      this.#internals.setValidity(
+        {
+          valueMissing: true,
+        },
+        'Please select an item in the list',
+        this.#root.querySelector('input'),
+      );
+    } else {
+      this.#internals.setValidity({});
+    }
+  }
 
   #handleOuterClick = ({ target }) => {
     if (!target.closest('dice-select')) {
@@ -134,6 +153,10 @@ class Select extends HTMLElement {
     input.setAttribute('part', 'input');
     input.setAttribute('readonly', 'true');
     input.onclick = this.#handleClick;
+
+    if (this.#disabled) {
+      input.setAttribute('disabled', 'true');
+    }
 
     if (this.#autofocus) {
       input.setAttribute('autofocus', 'true');
@@ -221,6 +244,28 @@ class Select extends HTMLElement {
     if (value) {
       this.#root.querySelector('input').focus();
     }
+  }
+
+  get disabled() {
+    return this.#disabled;
+  }
+
+  set disabled(value) {
+    this.#disabled = value;
+
+    if (value) {
+      this.#root.querySelector('input').setAttribute('disabled', 'true');
+    } else {
+      this.#root.querySelector('input').removeAttribute('disabled', 'true');
+    }
+  }
+
+  get required() {
+    return this.#required;
+  }
+
+  set required(value) {
+    this.#required = value;
   }
 
   static formAssociated() {
