@@ -19,6 +19,8 @@ class Select extends HTMLElement {
 
   #required = this.hasAttribute('required');
 
+  #searching = false;
+
   connectedCallback() {
     this.#render();
     this.#internals.setFormValue(this.#value);
@@ -33,6 +35,18 @@ class Select extends HTMLElement {
 
   disconnectedCallback() {
     document.removeEventListener('keyup', this.#handleKeyDown);
+  }
+
+  attributeChangedCallback(name, oldValue, newValue) {
+    if (name === 'value' && oldValue !== newValue) {
+      this.#value = newValue;
+    } else if (name === 'required' && oldValue !== newValue) {
+      this.required = newValue === 'true';
+    } else if (name === 'disabled' && oldValue !== newValue) {
+      this.disabled = newValue === 'true';
+    } else if (name === 'searchable' && oldValue !== newValue) {
+      this.searchable = newValue === 'true';
+    }
   }
 
   select(value) {
@@ -56,6 +70,14 @@ class Select extends HTMLElement {
     this.#root.querySelector('div').setAttribute('hidden', 'true');
     this.#root.querySelector('input').focus();
     this.#open = false;
+
+    if (this.#searchable) {
+      this.#root.querySelector('input[type="search"]').value = '';
+
+      for (const child of this.#children) {
+        child.removeAttribute('hidden');
+      }
+    }
 
     document.removeEventListener('click', this.#handleOuterClick);
   };
@@ -82,7 +104,7 @@ class Select extends HTMLElement {
 
   #handleKeyDown = (evt) => {
     if (['Enter', 'Escape', 'Tab'].includes(evt.key)) {
-      if (evt.key === 'Escape' && this.#open) {
+      if (evt.key === 'Escape' && this.#open && !this.#searching) {
         this.hide();
       }
 
@@ -101,6 +123,8 @@ class Select extends HTMLElement {
 
     if (document.activeElement.isSameNode(this) || document.activeElement.parentElement.isSameNode(this)) {
       if (['ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(evt.key)) {
+        this.#searching = false;
+
         if (evt.key === 'ArrowDown' && this.#focused !== this.#focusable.length - 1) {
           this.#focused += 1;
         } else if (evt.key === 'ArrowUp' && this.#focused > 0) {
@@ -118,6 +142,11 @@ class Select extends HTMLElement {
         this.#focusable[this.#focused].focus();
         this.select(this.#focusable[this.#focused].getAttribute('value'));
       }
+    }
+
+    if (evt.altKey && evt.key === 's') {
+      this.#searching = true;
+      this.#root.querySelector('input[type="search"]').focus();
     }
   };
 
@@ -150,6 +179,15 @@ class Select extends HTMLElement {
     const search = document.createElement('input');
     const slot = document.createElement('slot');
 
+    search.setAttribute('type', 'search');
+    search.setAttribute('aria-label', 'Filter this selection');
+    search.setAttribute('placeholder', 'Filter this selection');
+    search.oninput = this.#handleSearch;
+
+    if (!this.#searchable) {
+      search.setAttribute('hidden', 'true');
+    }
+
     input.setAttribute('part', 'input');
     input.setAttribute('readonly', 'true');
     input.onclick = this.#handleClick;
@@ -162,18 +200,9 @@ class Select extends HTMLElement {
       input.setAttribute('autofocus', 'true');
     }
 
-    if (this.#searchable) {
-      search.setAttribute('type', 'search');
-      search.setAttribute('aria-label', 'Filter this selection');
-      search.setAttribute('placeholder', 'Filter this selection');
-      search.oninput = this.#handleSearch;
-
-      dropdown.append(search);
-    }
-
     dropdown.setAttribute('part', 'dropdown');
     dropdown.setAttribute('hidden', 'true');
-    dropdown.append(slot);
+    dropdown.append(search, slot);
 
     this.#root.append(input, dropdown);
     this.#root.adoptedStyleSheets = [this.#styles];
@@ -256,7 +285,7 @@ class Select extends HTMLElement {
     if (value) {
       this.#root.querySelector('input').setAttribute('disabled', 'true');
     } else {
-      this.#root.querySelector('input').removeAttribute('disabled', 'true');
+      this.#root.querySelector('input').removeAttribute('disabled');
     }
   }
 
@@ -266,10 +295,30 @@ class Select extends HTMLElement {
 
   set required(value) {
     this.#required = value;
+
+    this.#handleValidation();
+  }
+
+  get searchable() {
+    return this.#searchable;
+  }
+
+  set searchable(value) {
+    this.#searchable = value;
+
+    if (value) {
+      this.#root.querySelector('input[type="search"]').removeAttribute('hidden');
+    } else {
+      this.#root.querySelector('input[type="search"]')?.setAttribute('hidden', 'true');
+    }
   }
 
   static formAssociated() {
     return true;
+  }
+
+  static get observedAttributes() {
+    return ['disabled', 'required', 'searchable', 'value'];
   }
 }
 

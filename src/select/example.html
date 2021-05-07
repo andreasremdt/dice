@@ -15,7 +15,7 @@
   <body>
     <form>
       <input type="text" />
-      <dice-select name="selection" required>
+      <dice-select name="selection" searchable>
         <dice-option value=""></dice-option>
         <dice-option value="123">123</dice-option>
         <dice-option value="456" selected>456</dice-option>
@@ -26,10 +26,9 @@
       </dice-select>
 
       <select required>
-        <option></option>
         <option value="123">123</option>
         <option value="456">456</option>
-        <option value="789">789</option>
+        <option value="789" selected>789</option>
         <option value="123">123</option>
         <option value="456" disabled>456</option>
         <option value="789" disabled>789</option>

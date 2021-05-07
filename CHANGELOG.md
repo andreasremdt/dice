@@ -3,6 +3,14 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.0-ahlpa.1] - 2021-05-07
+
+### `dice-select`
+
+- Improved the search behavior when the `searchable` attribute is present
+- Fixed attributes not being observed
+- Added more public API to reflect internal state
+
 ## [0.0.11-alpha] - 2021-05-07
 
 - Added a build pipeline with [rollup](https://rollupjs.org/)
