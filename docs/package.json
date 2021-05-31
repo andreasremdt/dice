@@ -1,0 +1,20 @@
+{
+  "name": "dice-docs",
+  "version": "1.0.0",
+  "description": "The official documentation of D.I.C.E.",
+  "main": "index.js",
+  "scripts": {
+    "build": "eleventy",
+    "serve": "eleventy --serve"
+  },
+  "keywords": [
+    "web",
+    "components",
+    "dice"
+  ],
+  "author": "Andreas Remdt",
+  "license": "ISC",
+  "devDependencies": {
+    "@11ty/eleventy": "^0.12.1"
+  }
+}

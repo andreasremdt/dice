@@ -1,0 +1,38 @@
+.main-navigation {
+  background-color: var(--primary-color);
+  flex: 0 0 25rem;
+  padding: 1.5rem 2rem;
+  box-sizing: border-box;
+  overflow-x: auto;
+}
+
+.main-navigation > .title {
+  color: white;
+  margin-bottom: 3rem;
+  font-size: 2.4rem;
+  font-weight: 300;
+  display: block;
+}
+
+.main-navigation > .category {
+  text-transform: uppercase;
+  color: var(--primary-color-light);
+  font-weight: 600;
+  font-size: 16px;
+  letter-spacing: 1px;
+  margin-top: 1.5rem;
+}
+
+.main-navigation > .link {
+  color: var(--primary-color-light);
+  text-decoration: none;
+  display: block;
+  padding: 0.2rem 1rem;
+  transition: color 0.15s linear, transform 0.25s ease-out;
+}
+
+.main-navigation > .link:hover,
+.main-navigation > .link:focus {
+  transform: translateX(0.3rem);
+  color: white;
+}

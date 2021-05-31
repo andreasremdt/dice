@@ -1,0 +1,143 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="author" content="Andreas Remdt" />
+    <meta name="description" content="" />
+
+    <title>Textarea - D.I.C.E.</title>
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link rel="stylesheet" href="/css/index.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;500&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <link rel="stylesheet" href="/css/main-navigation.css" />
+<nav class="main-navigation">
+  <span class="title">D.I.C.E.</span>
+
+  <h2 class="category">Getting Started</h2>
+
+  <a class="link" href="/">Introduction</a>
+  <a class="link" href="/quickstart/">Quick Start</a>
+  <a class="link" href="/installation/">Installation</a>
+  <a class="link" href="/basic-usage/">Basic Usage</a>
+
+  <h2 class="category">Components</h2>
+
+  <a class="link" href="/dialog/">Dialog</a>
+  <a class="link" href="/dropdown/">Dropdown</a>
+  <a class="link" href="/select/">Select</a>
+  <a class="link" href="/tabs/">Tabs</a>
+  <a class="link" href="/textarea/">Textarea</a>
+  <a class="link" href="/tooltip/">Tooltip</a>
+
+  <h2 class="category">About</h2>
+
+  <a class="link" href="https://github.com/andreasremdt/dice/" target="_blank" rel="noopener nofollow">GitHub</a>
+  <a class="link" href="https://github.com/andreasremdt/dice/issues/" target="_blank" rel="noopener nofollow"
+    >Open an Issue</a
+  >
+  <a class="link" href="https://github.com/andreasremdt/dice/blob/main/LICENSE" target="_blank" rel="noopener nofollow"
+    >License</a
+  >
+</nav>
+
+
+    <link rel="stylesheet" href="/css/main-content.css" />
+    <main class="main-content">
+      <div class="container"><h1>Textarea</h1>
+<p>The <code>dice-textarea</code> component adds one new feature to the standard <code>textarea</code> element: growing automatically with its content. Normally, you'd have to change the height of a <code>textarea</code> programmatically via JavaScript depending on the entered value. This work can be eliminated by using <code>dice-textarea</code>.</p>
+<p><em>Warning:</em> this component makes use of the new <a href="https://html.spec.whatwg.org/multipage/custom-elements.html#the-elementinternals-interface">ElementInternals interface</a>, which is (at the time of writing this document) not supported by all browsers. You can use the <a href="https://www.npmjs.com/package/element-internals-polyfill">polyfill</a> to make it work in your browser.</p>
+<h2>Usage</h2>
+<p>Basic HTML structure</p>
+<pre><code class="language-html">&lt;dice-textarea name=&quot;bio&quot; id=&quot;bio&quot; placeholder=&quot;Start writing...&quot; required&gt;&lt;/dice-textarea&gt;
+</code></pre>
+<h2>Configuration</h2>
+<p>The usage of this component is exactly the same as you would expect from a default textarea element. All attributes, like <code>value</code>, <code>pattern</code>, <code>maxlength</code>, etc. can be used.</p>
+<h2>Styling</h2>
+<p>Due to the internal implementation of the textarea element, there are two elements that can be styled:</p>
+<pre><code class="language-css">dice-textarea::part(wrapper),
+dice-textarea::part(textarea) {
+  --padding: 0.375rem 0.75rem;
+  max-height: 100px;
+}
+</code></pre>
+<p>The <code>wrapper</code> is needed to correctly calculate to the height of the textarea once it starts growing. If you want to style properties like <code>padding</code>, <code>max-height</code> or <code>height</code>, you need to set these values on both parts.</p>
+<p><em>Note:</em> if you just want to change the <code>padding</code>, you can do so by using the <code>--padding</code> CSS Custom Property on the <code>wrapper</code> part.</p>
+<p>If you just want to style the appearance of the textarea (<code>border</code>, <code>color</code>, etc.), you can use the <code>textarea</code> part:</p>
+<pre><code class="language-css">dice-textarea::part(textarea) {
+  width: 100%;
+  font-size: 1rem;
+  font-weight: 400;
+}
+</code></pre>
+<p><em>Attention:</em> overriding existing CSS properties such as <code>grid-area</code> or <code>overflow</code> can lead to a broken appearance. To avoid breaking the component, don't set the following properties: <code>display</code>, <code>grid-area</code>, and <code>overflow</code>.</p>
+<h2>Accessibility</h2>
+<p>The <code>dice-textarea</code> is pretty much identical to the native <code>textarea</code> element, hence no special accessibility features have been added.</p>
+<h2>JavaScript API</h2>
+<p>The <code>dice-textarea</code> element, if wrapped in a form, works as a form element and can provide its <code>value</code> like any other input element.</p>
+<pre><code class="language-js">document.querySelector('form').addEventListener('submit', (evt) =&gt; {
+  evt.preventDefault();
+
+  // Given that the first element is `dice-textarea`:
+  console.log(evt.target[0].value);
+});
+</code></pre>
+<p>Alternatively, you can use the FormData API to collect form values. Remember to set a <code>name</code> attribute to the <code>dice-textarea</code>:</p>
+<pre><code class="language-js">document.querySelector('form').addEventListener('submit', (evt) =&gt; {
+  evt.preventDefault();
+
+  var formData = new FormData(evt.target);
+
+  // Given that the `dice-textarea` has a `name` attribute of &quot;bio&quot;:
+  console.log(formData.get('bio'));
+});
+</code></pre>
+<h3>Events</h3>
+<p><code>dice-textarea</code> emits the same events as the native <code>textarea</code> element, hence you can just add event listeners like so:</p>
+<pre><code class="language-js">document.querySelector('dice-textarea').addEventListener('change', (evt) =&gt; {
+  console.log(evt.target.value);
+});
+
+document.querySelector('dice-textarea').addEventListener('focus', (evt) =&gt; {
+  console.log('focused');
+});
+
+document.querySelector('dice-textarea').addEventListener('blur', (evt) =&gt; {
+  console.log('blurred');
+});
+</code></pre>
+<h3>Properties</h3>
+<p>All valid <code>textarea</code> properties (like <code>maxLength</code>, <code>required</code>, or <code>value</code>) are reflected via properties and can be accessed or set:</p>
+<pre><code class="language-js">var textarea = document.querySelector('dice-textarea');
+
+// Sets the new value
+textarea.value = '123';
+
+// Gets the current value
+console.log(textarea.value);
+</code></pre>
+<p>The same task can be achieved by updating the attributes:</p>
+<pre><code class="language-js">var textarea = document.querySelector('dice-textarea');
+
+// Sets the new value
+textarea.setAttribute('value', '123');
+
+// Gets the current value
+console.log(textarea.getAttribute('value'));
+</code></pre>
+</div>
+    </main>
+
+    <script src="/js/prism.min.js"></script>
+    <script src="https://unpkg.com/@andreasremdt/dice@latest/lib/index.js" defer></script>
+  </body>
+</html>

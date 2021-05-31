@@ -1,0 +1,35 @@
+---
+title: Documentation
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="author" content="Andreas Remdt" />
+    <meta name="description" content="" />
+
+    <title>{{ title }} - D.I.C.E.</title>
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link rel="stylesheet" href="{{ '/css/index.css' | url }}" />
+    <link rel="stylesheet" href="{{ '/css/prism.css' | url }}" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;500&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    {% include navigation.html %}
+
+    <link rel="stylesheet" href="/css/main-content.css" />
+    <main class="main-content">
+      <div class="container">{{ content | safe }}</div>
+    </main>
+
+    <script src="/js/prism.min.js"></script>
+    <script src="https://unpkg.com/@andreasremdt/dice@latest/lib/index.js" defer></script>
+  </body>
+</html>

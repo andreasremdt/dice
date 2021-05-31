@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      body {
+        font: normal 16px/1.5 Ubuntu, sans-serif;
+        margin: 100px;
+      }
+
+      dice-dropdown::part(button) {
+        --background-color: #6c757d;
+        --border-color: var(--background-color);
+
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        color: #fff;
+        font: inherit;
+        background-color: var(--background-color);
+        border: 1px solid var(--border-color);
+        padding: 0.375rem 0.75rem;
+        border-radius: 0.25rem;
+        transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out,
+          box-shadow 0.15s ease-in-out;
+      }
+
+      dice-dropdown::part(button):hover,
+      dice-dropdown::part(button):active {
+        --background-color: #5c636a;
+      }
+
+      dice-dropdown::part(button):focus-visible {
+        outline: none;
+        box-shadow: 0 0 0 0.25rem rgb(130 138 145 / 50%);
+      }
+
+      dice-dropdown::part(menu) {
+        --spacing: 3px;
+
+        min-width: 10rem;
+        padding: 0.5rem 0;
+        color: #212529;
+        border-color: rgba(0, 0, 0, 0.15);
+        border-radius: 0.25rem;
+      }
+
+      .menu {
+        list-style: none;
+        padding: unset;
+        margin: unset;
+      }
+
+      .menu button {
+        --background-color: transparent;
+
+        background-color: var(--background-color);
+        font: inherit;
+        width: 100%;
+        text-align: left;
+        border: unset;
+        padding: 0.375rem 0.75rem;
+      }
+
+      .menu button:hover,
+      .menu button:focus {
+        --background-color: #e9ecef;
+      }
+    </style>
+  </head>
+  <body>
+    <form>
+      <label for="name">label 1</label>
+      <input type="text" name="name" id="name" />
+      <dice-textarea name="content" placeholder="type something" value="123">Content:</dice-textarea>
+      <hr />
+      <dice-select name="selection">
+        <dice-option value="123">123</dice-option>
+        <dice-option value="456" selected>456</dice-option>
+        <dice-option value="789">789</dice-option>
+      </dice-select>
+
+      <select>
+        <option value="123">123</option>
+        <option value="456">456</option>
+        <option value="789">789</option>
+      </select>
+      <hr />
+      <button type="submit">Submit</button>
+    </form>
+
+    <dice-tabs selected="tab2" label="This is a nice label">
+      <button slot="tab" data-for="tab1">Tab #1</button>
+      <button slot="tab" data-for="tab2">Tab #2</button>
+
+      <div id="tab1">Content of tab #1</div>
+      <div id="tab2">Content of tab #2</div>
+    </dice-tabs>
+
+    <dice-dialog aria-labelledby="some-id">
+      <h1 id="some-id">Hello World</h1>
+      <p>this is awesome</p>
+      <input />
+      <input />
+      <button onclick="dialog.hideModal();">close</button>
+    </dice-dialog>
+
+    <button onclick="openModal();">open modal</button>
+
+    <hr />
+
+    <p>
+      Lorem ipsum
+      <dice-tooltip content="hello world" placement="right"><a href="#">dolor sit</a></dice-tooltip> amet consectetur
+      adipisicing elit. Similique delectus inventore recusandae ipsam itaque iusto impedit harum vero voluptate
+      voluptatum, consequatur dolor unde esse a eos repudiandae ab quis dolore.
+    </p>
+
+    <script src="./lib/dialog.js"></script>
+    <!-- <script src="src/dropdown/dropdown.js" defer></script>
+    <script src="src/tabs.js" defer></script>
+    <script src="src/dialog/dialog.js" defer></script>
+    <script src="src/select.js" defer></script>
+    <script src="src/tooltip.js" defer></script> -->
+    <script>
+      var dialog = document.querySelector('dice-dialog');
+      function openModal() {
+        dialog.show();
+      }
+
+      // console.dir(document.querySelector("dice-textarea"));
+      document.querySelector('form').addEventListener('submit', (evt) => {
+        evt.preventDefault();
+
+        const formData = new FormData(evt.target);
+        // console.dir(evt.target[0].value);
+        console.dir(evt.target[2].value);
+        console.log(formData.get('selection'));
+      });
+    </script>
+  </body>
+</html>
