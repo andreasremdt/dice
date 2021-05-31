@@ -1,0 +1,119 @@
+<h1>Tooltip</h1>
+<p>Tooltips hide content that is crucial to a web application but can provide hints, tips, additional information and so on. Their content is hidden by default and only becomes visible once the user hovers over or focuses an HTML element, like a button or link.</p>
+<p>Tooltips can introduce accessibility issues, since there information is difficult to show for certain users (e.g. by using voice-commands or for screen readers). Their usage should be kept to an minimum and only for information that is not important to the user.</p>
+<p>The <code>dice-tooltip</code> component is designed with accessiblity and customization in mind. You can either pass a simple string for the tooltip to display or even provide entire HTML structures. Design and placement can be customized as well.</p>
+<h2>Usage</h2>
+<p>Basic HTML structure</p>
+<pre><code class="language-html">&lt;!-- using a simple string --&gt;
+&lt;dice-tooltip content=&quot;Hello, world!&quot; placement=&quot;top&quot;&gt;
+  &lt;a href=&quot;#&quot;&gt;Lorem ipsum dolor&lt;/a&gt;
+&lt;/dice-tooltip&gt;
+
+&lt;!-- using HTML --&gt;
+&lt;dice-tooltip content=&quot;&lt;h1&gt;Heading #1&lt;h1&gt;&lt;p&gt;Some more text...&lt;/p&gt;&quot; placement=&quot;top&quot;&gt;
+  &lt;a href=&quot;#&quot;&gt;Lorem ipsum dolor&lt;/a&gt;
+&lt;/dice-tooltip&gt;
+
+&lt;!-- using HTML with a template tag --&gt;
+&lt;dice-tooltip template=&quot;template1&quot; placement=&quot;top&quot;&gt;
+  &lt;a href=&quot;#&quot;&gt;Lorem ipsum dolor&lt;/a&gt;
+&lt;/dice-tooltip&gt;
+
+&lt;template id=&quot;template1&quot;&gt;
+  &lt;h1&gt;Heading #1&lt;h1&gt;
+  &lt;p&gt;Some more text...&lt;/p&gt;
+&lt;/template&gt;
+</code></pre>
+<p>You can put any HTML element inside the tooltip that you want. It will be displayed without any further modifications.</p>
+<p><em>Note: even though possible, it's highly recommended to use interactive elements as tooltip children only (<code>button</code>, <code>a</code>, etc.). This has accessibility benefits and is considered best practice.</em></p>
+<h2>Configuration</h2>
+<h3>placement</h3>
+<p>You can customize the position of the tooltip by providing the <code>placement</code> attribute:</p>
+<pre><code class="language-html">&lt;dice-tooltip content=&quot;&quot; placement=&quot;bottom&quot;&gt;...&lt;/dice-tooltip&gt;
+</code></pre>
+<p><strong>Default:</strong> <code>bottom</code></p>
+<p>Can be <code>bottom</code>, <code>top</code>, <code>left</code>, or <code>right</code>.</p>
+<h3>open</h3>
+<p>If you want to have the tooltip opened without any user interaction, you can set the <code>open</code> attribute:</p>
+<pre><code class="language-html">&lt;dice-tooltip content=&quot;&quot; open&gt;...&lt;/dice-tooltip&gt;
+</code></pre>
+<p><em>Note: once the user leaves the tooltip (<code>mouseleave</code> or <code>blur</code> event), the tooltip will be hidden again.</em></p>
+<h3>content</h3>
+<p>The <code>content</code> attribute controls what the tooltip should display. It can be a simple string or an entire HTML structure:</p>
+<pre><code class="language-html">&lt;dice-tooltip content=&quot;Hello, world!&quot;&gt;...&lt;/dice-tooltip&gt;
+&lt;dice-tooltip content=&quot;&lt;h1&gt;Heading #1&lt;h1&gt;&lt;p&gt;Some more text...&lt;/p&gt;&quot;&gt;...&lt;/dice-tooltip&gt;
+</code></pre>
+<h3>template</h3>
+<p>If you want to provide HTML to the tooltip but dislike passing it as a string, you can alternetively make use of the HTML 5 <code>template</code> element and reference its ID to the tooltip:</p>
+<pre><code class="language-html">&lt;dice-tooltip template=&quot;template1&quot; placement=&quot;top&quot;&gt;
+  &lt;a href=&quot;#&quot;&gt;Lorem ipsum dolor&lt;/a&gt;
+&lt;/dice-tooltip&gt;
+
+&lt;template id=&quot;template1&quot;&gt;
+  &lt;h1&gt;Heading #1&lt;h1&gt;
+  &lt;p&gt;Some more text...&lt;/p&gt;
+&lt;/template&gt;
+</code></pre>
+<h2>Styling</h2>
+<p>Tooltips are lightly styled by default and can be customized if desired. There are certain CSS properties like <code>position</code>, <code>top</code>, or <code>left</code> which shouldn't be overridden to not break the positioning.</p>
+<pre><code class="language-css">dice-tooltip::part(tooltip) {
+  font-size: 12px;
+}
+
+dice-tooltip::part(tooltip)::before {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+</code></pre>
+<p>Tooltips have a light transition out-of-the-box, making their appearance more pleasing. The animation, the animation timing and other basic properties can be easily changed by setting CSS Custom Properties:</p>
+<pre><code class="language-css">dice-tooltip::part(tooltip) {
+  --spacing: 10px;
+  --background-color: tomato;
+  --color: white;
+  --transition-duration: 0.2s;
+  --transition-animation: linear;
+}
+</code></pre>
+<p><code>--spacing</code> controls the distance between the tooltip and its child element to which it is attached.</p>
+<p><em>Attention:</em> overriding existing CSS properties such as <code>position</code> can lead to a broken appearance. To avoid breaking the component, don't set the following properties: <code>position</code>, <code>top</code>, <code>left</code>, <code>right</code>, and <code>bottom</code>.</p>
+<h2>Accessibility</h2>
+<p>Elements inside the tooltip should be interactive and be able to receive focus (such as buttons or links). Hovering over them will show the tooltip, leaving them will hide it.</p>
+<p>If a child element is focused, the tooltip is also shown, while it's hidden when the focus is lost or the &quot;Escape&quot; key is pressed.</p>
+<h2>JavaScript API</h2>
+<h3>Methods</h3>
+<p>You can programmatically show or hide a tooltip by calling the appropriate methods:</p>
+<pre><code class="language-js">var tooltip = document.querySelector('dice-tooltip');
+
+// Makes the tooltip appear
+tooltip.show();
+
+// Hides the tooltip
+tooltip.hide();
+</code></pre>
+<h3>Properties</h3>
+<p>Alternatively to the above methods, you can set the <code>open</code> property:</p>
+<pre><code class="language-js">var tooltip = document.querySelector('dice-tooltip');
+
+// Makes the tooltip appear
+tooltip.open = true;
+
+// Hides the tooltip
+tooltip.open = false;
+</code></pre>
+<p>The <code>open</code> property also reflects the current state, meaning that if the tooltip is shown, it will return <code>true</code>, otherwise <code>false</code>.</p>
+<p>If you want to change the placement and content after the component has been rendered, you can do so via the appropriate properties:</p>
+<pre><code class="language-js">var tooltip = document.querySelector('dice-tooltip');
+
+tooltip.placement = 'right';
+tooltip.content = 'Updated content';
+</code></pre>
+<p>The same task can be achieved by updating the attributes:</p>
+<pre><code class="language-js">var tooltip = document.querySelector('dice-tooltip');
+
+tooltip.setAttribute('placement', 'right');
+tooltip.setAttribute('content', 'Updated content');
+tooltip.setAttribute('template', 'templateId123');
+tooltip.removeAttribute('open');
+</code></pre>

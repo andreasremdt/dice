@@ -1,0 +1,156 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="author" content="Andreas Remdt" />
+    <meta name="description" content="" />
+
+    <title>Dropdown - D.I.C.E.</title>
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link rel="stylesheet" href="/css/index.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;500&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <link rel="stylesheet" href="/css/main-navigation.css" />
+<nav class="main-navigation">
+  <span class="title">D.I.C.E.</span>
+
+  <h2 class="category">Getting Started</h2>
+
+  <a class="link" href="/">Introduction</a>
+  <a class="link" href="/quickstart/">Quick Start</a>
+  <a class="link" href="/installation/">Installation</a>
+  <a class="link" href="/basic-usage/">Basic Usage</a>
+
+  <h2 class="category">Components</h2>
+
+  <a class="link" href="/dialog/">Dialog</a>
+  <a class="link" href="/dropdown/">Dropdown</a>
+  <a class="link" href="/select/">Select</a>
+  <a class="link" href="/tabs/">Tabs</a>
+  <a class="link" href="/textarea/">Textarea</a>
+  <a class="link" href="/tooltip/">Tooltip</a>
+
+  <h2 class="category">About</h2>
+
+  <a class="link" href="https://github.com/andreasremdt/dice/" target="_blank" rel="noopener nofollow">GitHub</a>
+  <a class="link" href="https://github.com/andreasremdt/dice/issues/" target="_blank" rel="noopener nofollow"
+    >Open an Issue</a
+  >
+  <a class="link" href="https://github.com/andreasremdt/dice/blob/main/LICENSE" target="_blank" rel="noopener nofollow"
+    >License</a
+  >
+</nav>
+
+
+    <link rel="stylesheet" href="/css/main-content.css" />
+    <main class="main-content">
+      <div class="container"><h1>Dropdown</h1>
+<p>The dropdown component can be used whenever the goal is to implement a customizable menu is needed, which can be triggered via a button click or JavaScript.</p>
+<p>Most web applications make use of this popular component pattern, e.g. GitHubs user menu on the top right corner. The difference to using a <code>select</code> element is that any kind of content can be put into a dropdown, including lists, buttons, links, images, and more. <code>select</code> elements only support <code>option</code> elements inside, limiting its use case to forms or pure text data.</p>
+<p>The <code>dice-dropdown</code> component is designed with accessiblity and customization in mind. You can freely decide what HTML structure should be part of the menu and the triggering button and can style them to your wishes.</p>
+<h2>Usage</h2>
+<p>Basic HTML structure</p>
+<pre><code class="language-html">&lt;dice-dropdown&gt;
+  Click me
+
+  &lt;ul slot=&quot;menu&quot;&gt;
+    &lt;li&gt;&lt;a href=&quot;#&quot;&gt;Link #1&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&quot;#&quot;&gt;Link #2&lt;/a&gt;&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/dice-dropdown&gt;
+</code></pre>
+<h3>Button</h3>
+<p>Everything that isn't part of a named slot inside the <code>dice-dropdown</code> element is part of the button. In the above example, the text &quot;Click me&quot; will be put inside. You can also include images, SVGs, or other elements.</p>
+<h3>Menu</h3>
+<p>Elements that are marked with the <code>menu</code> slot will be put inside the expanding menu. This can be any HTML structure, such as lists, links, buttons, or anything else.</p>
+<h2>Configuration</h2>
+<p>You can customize the position of the expanding menu by providing <code>placement</code> and <code>align</code> attributes:</p>
+<pre><code class="language-html">&lt;dice-dropdown placement=&quot;bottom&quot; align=&quot;right&quot;&gt;&lt;/dice-dropdown&gt;
+</code></pre>
+<h3>open</h3>
+<p>If you want to have a dropdown opened without the user clicking the button first, you can set the <code>open</code> attribute:</p>
+<pre><code class="language-html">&lt;dice-dropdown open&gt;&lt;/dice-dropdown&gt;
+</code></pre>
+<h3>placement</h3>
+<p><strong>Default:</strong> <code>bottom</code></p>
+<p>Can be <code>bottom</code>, <code>top</code>, <code>left</code>, or <code>right</code>.</p>
+<h3>align</h3>
+<p><strong>Default:</strong> <code>left</code></p>
+<p>If the <code>placement</code> attribute is set to <code>bottom</code> or <code>top</code>, then this attribute can be either <code>left</code> or <code>right</code>.</p>
+<p>Else, if the <code>placement</code> attribute is set to <code>left</code> or <code>right</code>, this attribute can be <code>bottom</code>, <code>top</code>.</p>
+<h2>Styling</h2>
+<p>Every element that is passed into the <code>menu</code> slot can freely be styled by your existing CSS using IDs, classes, or element selectors.</p>
+<h3>Button</h3>
+<p>To style the button, the <code>button</code> part is made available:</p>
+<pre><code class="language-css">dice-dropdown::part(button) {
+  background-color: #6c757d;
+}
+
+dice-dropdown::part(button):hover {
+  background-color: #365934;
+}
+</code></pre>
+<h3>Menu</h3>
+<p>To style the menu, the <code>menu</code> part is made available:</p>
+<pre><code class="language-css">dice-dropdown::part(menu) {
+  border: 1px solid #d3d4d5;
+}
+</code></pre>
+<p><em>Attention:</em> overriding existing CSS properties such as <code>position</code> can lead to a broken appearance. To avoid breaking the component, don't set the following properties: <code>position</code>, <code>top</code>, <code>left</code>, <code>right</code>, and <code>bottom</code>.</p>
+<h2>Accessibility</h2>
+<p>Elements inside the dropdown that can receive focus (such as buttons or links) will be indexed automatically and keyboard navigation will be enabled.</p>
+<p>A dropdown can be opened by focusing the button and pressing &quot;Enter&quot;. Once it's opened, it can be closed by pressing &quot;Escape&quot; or clicking outside.</p>
+<p>If a dropdown is opened and has focusable elements inside, the &quot;Tab&quot; key can be used to navigate through them. Once the end is reached, the dropdown will close and the next element in the DOM tree will be focused.</p>
+<p>You can also use the Arrow Up &amp; Arrow Down keys to navigate between elements. Pressing &quot;Home&quot; will focus the first element, pressing &quot;End&quot; will focus the last one.</p>
+<h2>JavaScript API</h2>
+<h3>Methods</h3>
+<p>You can programmatically show or hide the dropdown by calling the appropriate methods:</p>
+<pre><code class="language-js">var dropdown = document.querySelector('dice-dropdown');
+
+// Makes the dropdown appear
+dropdown.show();
+
+// Hides the dropdown
+dropdown.hide();
+</code></pre>
+<h3>Properties</h3>
+<p>Alternatively to the above methods, you can set the <code>open</code> property:</p>
+<pre><code class="language-js">var dropdown = document.querySelector('dice-dropdown');
+
+// Makes the dropdown appear
+dropdown.open = true;
+
+// Hides the dropdown
+dropdown.open = false;
+</code></pre>
+<p>The <code>open</code> property also reflects the current state, meaning that if the dropdown is shown, it will return <code>true</code>, otherwise <code>false</code>.</p>
+<p>If you want to change the placement and alignment after the component has been rendered, you can do so via the appropriate properties:</p>
+<pre><code class="language-js">var dropdown = document.querySelector('dice-dropdown');
+
+// This will change the position of the dropdown
+dropdown.placement = 'right';
+dropdown.align = 'top';
+</code></pre>
+<p>The same task can be achieved by updating the attributes:</p>
+<pre><code class="language-js">var dropdown = document.querySelector('dice-dropdown');
+
+// This will change the position of the dropdown
+dropdown.setAttribute('placement', 'right');
+dropdown.setAttribute('align', 'top');
+</code></pre>
+</div>
+    </main>
+
+    <script src="/js/prism.min.js"></script>
+    <script src="https://unpkg.com/@andreasremdt/dice@latest/lib/index.js" defer></script>
+  </body>
+</html>

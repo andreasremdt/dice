@@ -1,0 +1,10 @@
+.main-content {
+  overflow-x: auto;
+  flex-grow: 1;
+}
+
+.main-content > .container {
+  max-width: 50rem;
+  margin: auto;
+  padding: 1.5rem 2rem;
+}
