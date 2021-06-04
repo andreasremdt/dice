@@ -1,0 +1,27 @@
+name: Testing
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Setup Node.js environment
+      - uses: actions/setup-node@v2.1.5
+        with:
+         node-version: 14.x
+         
+      - name: Install dependencies
+        run: npm install
+        
+      - name: Lint & test code
+        run: |
+          run: npm run lint
+          run: npm test
