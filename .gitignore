@@ -105,3 +105,6 @@ dist
 
 # Compilted library output
 lib/
+
+# Eleventy Output
+docs/_site
