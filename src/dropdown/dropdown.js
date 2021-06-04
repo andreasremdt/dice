@@ -18,10 +18,10 @@ class Dropdown extends HTMLElement {
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
-    if (name === 'open' && newValue) {
+    if (name === 'open') {
       if (newValue === 'true') {
         this.show();
-      } else {
+      } else if (oldValue === 'true' && oldValue !== newValue) {
         this.hide();
       }
     } else if (name === 'placement' && oldValue && oldValue !== newValue) {
