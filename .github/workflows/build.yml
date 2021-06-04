@@ -7,21 +7,17 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-20.04
-
-    strategy:
-      matrix:
-        node-version: [14.x]
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v2
 
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
+      - name: Setup Node.js environment
+      - uses: actions/setup-node@v2.1.5
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 14.x
 
-      - name: Install Dependencies & Build
+      - name: Install dependencies & build docs
         run: |
           cd docs
           npm ci
