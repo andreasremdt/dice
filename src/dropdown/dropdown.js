@@ -7,7 +7,7 @@ class Dropdown extends HTMLElement {
 
   #align = this.getAttribute('align') || 'left';
 
-  #focused = 0;
+  #focused = -1;
 
   connectedCallback() {
     this.#render();
@@ -38,7 +38,6 @@ class Dropdown extends HTMLElement {
     document.addEventListener('click', this.#handleOuterClick);
 
     this.#open = true;
-    this.#focused = -1;
     this.#root.querySelector('div').removeAttribute('hidden');
     this.#root.querySelector('button').setAttribute('aria-expanded', 'true');
   }
@@ -48,6 +47,7 @@ class Dropdown extends HTMLElement {
     document.removeEventListener('click', this.#handleOuterClick);
 
     this.#open = false;
+    this.#focused = -1;
     this.#root.querySelector('div').setAttribute('hidden', 'true');
     this.#root.querySelector('button').setAttribute('aria-expanded', 'false');
 
@@ -90,7 +90,9 @@ class Dropdown extends HTMLElement {
         this.#focused = this.#focusable.length - 1;
       }
 
-      this.#focusable[this.#focused].focus();
+      if (this.#focused >= 0) {
+        this.#focusable[this.#focused].focus();
+      }
     }
   };
 
