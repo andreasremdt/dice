@@ -72,7 +72,25 @@ describe('Mouse navigation', () => {
     expect(button.getAttribute('aria-expanded')).toEqual('false');
   });
 
-  test.todo('when clicking outside the dropdown, it is closed');
+  test('when clicking outside the dropdown, it is closed', () => {
+    const { shadow } = render(
+      `<dice-dropdown open>
+        User menu
+
+        <ul slot="menu">
+          <li><button>Settings</button></li>
+          <li><button>Organizations</button></li>
+        </ul>
+      </dice-dropdown>`,
+      'dice-dropdown',
+    );
+
+    const menu = shadow.lastElementChild;
+
+    document.body.click();
+
+    expect(menu.hasAttribute('hidden')).toEqual(true);
+  });
 });
 
 describe('Keyboard navigation', () => {
@@ -117,28 +135,94 @@ describe('Keyboard navigation', () => {
     const [items] = getSlotContent(menu);
 
     simulate(button, 'click');
-
     expect(document.activeElement).toEqual(document.body);
-
     simulate(document, 'keydown', { key: 'Tab' });
-
     expect(document.activeElement).toEqual(items.children[0].firstElementChild);
-
     simulate(document, 'keydown', { key: 'Tab' });
-
     expect(document.activeElement).toEqual(items.children[1].firstElementChild);
-
     simulate(document, 'keydown', { key: 'Tab' });
-
     expect(button.getAttribute('aria-expanded')).toEqual('false');
-    // expect(document.activeElement).toEqual(document.body);
   });
 
-  test.todo('shift tab');
+  test('when pressing Shift + Tab, the previous menu item is focused', () => {
+    const { shadow } = render(
+      `<dice-dropdown>
+        User menu
+        
+        <ul slot="menu">
+          <li><button>Settings</button></li>
+          <li><button>Organizations</button></li>
+        </ul>
+      </dice-dropdown>`,
+      'dice-dropdown',
+    );
 
-  test.todo('the next/previous menu item can be focused with arrow keys');
+    const button = shadow.firstElementChild;
+    const menu = shadow.lastElementChild;
+    const [items] = getSlotContent(menu);
 
-  test.todo('the first/last menu item can be focused directly');
+    simulate(button, 'click');
+    expect(document.activeElement).toEqual(document.body);
+    simulate(document, 'keydown', { key: 'End' });
+    expect(document.activeElement).toEqual(items.children[1].firstElementChild);
+    simulate(document, 'keydown', { key: 'Tab', shiftKey: true });
+    expect(document.activeElement).toEqual(items.children[0].firstElementChild);
+  });
+
+  test('the next/previous menu item can be focused with arrow keys', () => {
+    const { shadow } = render(
+      `<dice-dropdown>
+        User menu
+        
+        <ul slot="menu">
+          <li><button>Settings</button></li>
+          <li><button>Organizations</button></li>
+        </ul>
+      </dice-dropdown>`,
+      'dice-dropdown',
+    );
+
+    const button = shadow.firstElementChild;
+    const menu = shadow.lastElementChild;
+    const [items] = getSlotContent(menu);
+
+    simulate(button, 'click');
+    simulate(document, 'keydown', { key: 'ArrowDown' });
+    expect(document.activeElement).toEqual(items.children[0].firstElementChild);
+    simulate(document, 'keydown', { key: 'ArrowDown' });
+    expect(document.activeElement).toEqual(items.children[1].firstElementChild);
+    simulate(document, 'keydown', { key: 'ArrowDown' });
+    expect(document.activeElement).toEqual(items.children[1].firstElementChild);
+    simulate(document, 'keydown', { key: 'ArrowUp' });
+    expect(document.activeElement).toEqual(items.children[0].firstElementChild);
+    simulate(document, 'keydown', { key: 'ArrowUp' });
+    expect(document.activeElement).toEqual(items.children[0].firstElementChild);
+  });
+
+  test('the first/last menu item can be focused directly', () => {
+    const { shadow } = render(
+      `<dice-dropdown>
+        User menu
+        
+        <ul slot="menu">
+          <li><button>Settings</button></li>
+          <li><button>Profile</button></li>
+          <li><button>Organizations</button></li>
+        </ul>
+      </dice-dropdown>`,
+      'dice-dropdown',
+    );
+
+    const button = shadow.firstElementChild;
+    const menu = shadow.lastElementChild;
+    const [items] = getSlotContent(menu);
+
+    simulate(button, 'click');
+    simulate(document, 'keydown', { key: 'End' });
+    expect(document.activeElement).toEqual(items.children[2].firstElementChild);
+    simulate(document, 'keydown', { key: 'Home' });
+    expect(document.activeElement).toEqual(items.children[0].firstElementChild);
+  });
 });
 
 describe('Public API', () => {
@@ -183,5 +267,3 @@ describe('Public API', () => {
     expect(menu.hasAttribute('hidden')).toEqual(true);
   });
 });
-
-describe('Styling?', () => {});

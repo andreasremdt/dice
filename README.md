@@ -1,6 +1,10 @@
 # D.I.C.E.
 
-This library is a collection of feature-rich, accessible, and customizable Custom Elements (also known as Web Components) that you can use in your web applications.
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/andreasremdt/dice/Lint%20&%20Test%20Code)
+![NPM](https://img.shields.io/npm/l/@andreasremdt/dice)
+![npm (scoped)](https://img.shields.io/npm/v/@andreasremdt/dice)
+
+A collection of feature-rich, accessible, and customizable Custom Elements (also known as Web Components) that you can use in your web applications.
 
 ## The Problem
 
