@@ -1,7 +1,8 @@
 {
   "env": {
     "browser": true,
-    "es2021": true
+    "es2021": true,
+    "jest": true
   },
   "extends": ["eslint:recommended", "airbnb-base", "prettier"],
   "parser": "@babel/eslint-parser",
@@ -14,5 +15,10 @@
     "no-restricted-syntax": "off",
     "implicit-arrow-linebreak": "off",
     "import/extensions": "off"
+  },
+  "globals": {
+    "render": "readonly",
+    "simulate": "readonly",
+    "getSlotContent": "readonly"
   }
 }
