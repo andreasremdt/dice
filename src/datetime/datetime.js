@@ -68,7 +68,7 @@ class DateTime extends HTMLElement {
     const previous = document.createElement('button');
     const caption = document.createElement('caption');
     let month = new Date().getMonth();
-    let year = new Date().getFullYear();
+    const year = new Date().getFullYear();
 
     function update(newYear, newMonth) {
       calendar.innerHTML = '';
