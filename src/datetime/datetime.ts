@@ -94,9 +94,9 @@ class DateTime extends HTMLElement {
     };
 
     input.setAttribute('type', 'number');
-    input.value = year;
-    input.onchange = (evt) => {
-      update(Number(evt.target.value), month);
+    input.value = String(year);
+    input.onchange = (evt: Event) => {
+      update(Number((<HTMLInputElement>evt.target).value), month);
     };
 
     span.textContent = getMonths()[month];

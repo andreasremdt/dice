@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "ES2016",
+    "module": "ES2015",
+    "baseUrl": "./",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": false,
+    "skipLibCheck": true,
+    "allowJs": true,
+    "outDir": "./lib"
+  },
+  "include": ["./src/**/*"],
+  "exclude": ["./lib/", "./docs/"]
+}

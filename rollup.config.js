@@ -1,23 +1,25 @@
-import { babel } from "@rollup/plugin-babel";
-import { terser } from "rollup-plugin-terser";
+import typescript from '@rollup/plugin-typescript';
 
-const COMPONENTS = ["dialog", "dropdown", "select", "tabs", "textarea", "tooltip"];
+const COMPONENTS = ['dialog', 'dropdown', 'select', 'tabs', 'textarea', 'tooltip'];
 
+/**
+ * @type {import('rollup').RollupOptions}
+ */
 export default [
   ...COMPONENTS.map((component) => ({
-    input: `src/${component}/${component}.js`,
+    input: `src/${component}/${component}.ts`,
     output: {
-      dir: "lib",
+      dir: 'lib',
       sourcemap: true,
     },
-    plugins: [babel({ babelHelpers: "inline" }), terser()],
+    plugins: [typescript({ tsconfig: './tsconfig.json' })],
   })),
   {
-    input: "src/index.js",
+    input: 'src/index.ts',
     output: {
-      dir: "lib",
+      dir: 'lib',
       sourcemap: true,
     },
-    plugins: [babel({ babelHelpers: "inline" }), terser()],
+    plugins: [typescript({ tsconfig: './tsconfig.json' })],
   },
 ];

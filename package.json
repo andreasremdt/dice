@@ -4,6 +4,7 @@
   "description": "D.I.C.E. stands for dependency-free, interactive, custom elements, a collection of custom HTML elements.",
   "scripts": {
     "build": "rollup -c",
+    "dev": "rollup -c -w",
     "test": "jest",
     "lint": "eslint src/**/*.js",
     "format": "prettier --write ./src"
@@ -22,6 +23,7 @@
     "type": "git",
     "url": "git+https://github.com/andreasremdt/dice.git"
   },
+  "type": "module",
   "keywords": [
     "custom elements",
     "web components",
@@ -35,18 +37,15 @@
   },
   "homepage": "https://github.com/andreasremdt/dice#readme",
   "devDependencies": {
-    "@babel/core": "^7.13.14",
-    "@babel/eslint-parser": "^7.13.14",
-    "@babel/plugin-proposal-class-properties": "^7.13.0",
-    "@babel/plugin-proposal-private-methods": "^7.13.0",
-    "@rollup/plugin-babel": "^5.3.0",
+    "@rollup/plugin-typescript": "^9.0.2",
     "eslint": "^7.25.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-import": "^2.22.1",
     "jest": "^27.0.4",
     "prettier": "^2.2.1",
-    "rollup": "^2.47.0",
-    "rollup-plugin-terser": "^7.0.2"
+    "rollup": "^3.3.0",
+    "tslib": "^2.4.1",
+    "typescript": "^4.9.3"
   }
 }

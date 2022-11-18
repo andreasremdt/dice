@@ -45,11 +45,11 @@ class Textarea extends HTMLElement {
   }
 
   setRangeText(...args) {
-    this.#root.querySelector('textarea').setRangeText(...args);
+    this.#root.querySelector('textarea').setRangeText.apply(null, ...args);
   }
 
   setSelectionRange(...args) {
-    this.#root.querySelector('textarea').setSelectionRange(...args);
+    this.#root.querySelector('textarea').setSelectionRange.apply(null, ...args);
   }
 
   #handleInput = (evt) => {
@@ -117,6 +117,7 @@ class Textarea extends HTMLElement {
     div.append(textarea);
 
     for (const attribute of this.attributes) {
+      // @ts-ignore
       textarea.setAttributeNode(attribute.cloneNode());
     }
 
@@ -126,7 +127,7 @@ class Textarea extends HTMLElement {
     textarea.onchange = this.#handleChange;
 
     if (textarea.hasAttribute('id')) {
-      const label = document.querySelector(`label[for="${textarea.getAttribute('id')}"]`);
+      const label = document.querySelector(`label[for="${textarea.getAttribute('id')}"]`) as HTMLLabelElement;
 
       if (label) label.onclick = () => textarea.focus();
     }
