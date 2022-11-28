@@ -36,7 +36,7 @@
   },
   "homepage": "https://github.com/andreasremdt/dice#readme",
   "devDependencies": {
-    "@rollup/plugin-typescript": "^9.0.2",
+    "@rollup/plugin-typescript": "^10.0.0",
     "prettier": "^2.7.1",
     "rollup": "^3.3.0",
     "tslib": "^2.4.1",
